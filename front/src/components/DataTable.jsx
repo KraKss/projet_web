@@ -23,6 +23,7 @@ const DataTable = ({ data, columns, actions }) => {
                             ))}
                             {actions && (
                                 <td>
+                                    {/*Laissez champs vides si pas de modif*/}
                                     <button className={styles.editButton}>✏️</button>
                                     <button className={styles.deleteButton}>🗑️</button>
                                 </td>

@@ -6,10 +6,12 @@ import Router from 'express-promise-router';
 // import {default as clientRouter} from './client.js';
 
 import {default as profileRouter} from "./profile.js";
+import {default as productRouter} from "./product.js";
 
 const router = Router();
 
 router.use("/api/profile", profileRouter);
+router.use("/api/product", productRouter);
 
 // router.use('/client', clientRouter);
 // router.use('/product', productRouter);

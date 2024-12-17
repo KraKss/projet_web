@@ -1,16 +1,15 @@
 import prisma from "../../database/databseORM.js";
 import {profileSchema, updateProfileSchema} from "../../validator/profile.js";
 import {hash} from "../../util/hash.js";
-import profile from "../routes/profile.js";
 
 export const getProfileById = async (req, res)=> {
     try {
         const profile = await prisma.profile.findUnique({
             where: {
-                id: Number(req.params.id),
+                id: parseInt(req.params.id),
             }
         });
-        if(profile){
+        if (profile) {
             res.send(profile);
         } else {
             res.sendStatus(404);

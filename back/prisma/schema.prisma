@@ -11,14 +11,14 @@ model order_items {
   order_id   Int
   product_id Int
   quantity   Int
-  orders     orders  @relation(fields: [order_id], references: [order_id], onDelete: NoAction, onUpdate: NoAction)
-  product    product @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction)
+  orders     orders  @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product    product @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([order_id, product_id])
 }
 
 model orders {
-  order_id        Int              @id @default(autoincrement())
+  id              Int              @id @default(autoincrement())
   buyer_id        Int
   payment_status  payment_status?  @default(pending)
   shipping_status shipping_status? @default(not_shipped)
@@ -28,7 +28,7 @@ model orders {
 }
 
 model product {
-  product_id    Int           @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   seller_id     Int
   name          String        @db.VarChar(255)
   description   String?

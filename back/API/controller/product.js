@@ -8,11 +8,10 @@ export const getProductById = async (req, res)=> {
                 id: parseInt(req.params.id)
             }
         });
-        if (product) {
-            res.send(product);
-        } else {
-            res.sendStatus(404);
-        }
+
+        if (product) res.send(product);
+        else res.sendStatus(404);
+
     } catch (err) {
         console.error(err);
         res.sendStatus(500);

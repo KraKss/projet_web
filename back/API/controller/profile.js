@@ -1,19 +1,22 @@
 import prisma from "../../database/databseORM.js";
 import {profileSchema, updateProfileSchema} from "../../validator/profile.js";
-import {hash} from "../../util/hash.js";
+import {hash} from "../../utils/hash.js";
+
+export const findProfileById = async (id) => {
+    return prisma.profile.findUnique({
+        where: {
+            id: parseInt(id)
+        },
+    });
+};
 
 export const getProfileById = async (req, res)=> {
     try {
-        const profile = await prisma.profile.findUnique({
-            where: {
-                id: parseInt(req.params.id),
-            }
-        });
-        if (profile) {
-            res.send(profile);
-        } else {
-            res.sendStatus(404);
-        }
+        const profile = await findProfileById(parseInt(req.params.id))
+
+        if (profile) res.send(profile);
+        else res.sendStatus(404);
+
     } catch (err) {
         console.error(err);
         res.sendStatus(500);

@@ -81,7 +81,7 @@ export const updateProfile = async (req, res) => {
     }
 }
 
-export const deleteProfile = async (req, res) => {
+export const deleteProfileById = async (req, res) => {
     try {
         await prisma.profile.delete({
             where: {

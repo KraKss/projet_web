@@ -21,62 +21,62 @@ export const getReviewBySellerId = async (req, res)=> {
     }
 };
 
-// export const addReview = async (req, res) => {
-//     try {
-//         const { reviewer_id, seller_id, rating, comment, reviewer_profile, seller_profile } = req.body;
-//
-//         const validatedBody = reviewSchema.parse({
-//             reviewer_id, seller_id, rating, comment, reviewer_profile, seller_profile
-//         });
-//
-//         const dataToInsert = {
-//             rating: validatedBody.rating,
-//             comment: validatedBody.comment
-//         };
-//
-//         // const reviewerProfile = await findProfileById(reviewer_id);
-//         // const sellerProfile = await findProfileById(seller_id);
-//
-//         const review = await prisma.review.create({
-//             data: {
-//                 ...dataToInsert,
-//                 reviewer_id: {
-//                     connectOrCreate: {
-//                         where: {
-//                             id: reviewer_id
-//                         },
-//                         create: {
-//                             ...reviewer_profile
-//                         }
-//                     }
-//                 },
-//                 seller_id: {
-//                     connectOrCreate: {
-//                         where: {
-//                             id: seller_id
-//                         },
-//                         create: {
-//                             ...seller_profile
-//                         }
-//                     }
-//                 }
-//             },
-//             include: {
-//                 profile_review_reviewer_idToprofile: true,
-//                 profile_review_seller_idToprofile: true
-//             }
-//         });
-//
-//         console.log("review added");
-//         res.status(201).send(review);
-//     } catch (e) {
-//         console.error("Error: " + e);
-//         return res.status(500).json({
-//             error: "An error occurred",
-//             details: e.message
-//         });
-//     }
-// };
+export const addReview = async (req, res) => {
+    try {
+        const { reviewer_id, seller_id, rating, comment, reviewer_profile, seller_profile } = req.body;
+
+        const validatedBody = reviewSchema.parse({
+            reviewer_id, seller_id, rating, comment, reviewer_profile, seller_profile
+        });
+
+        const dataToInsert = {
+            rating: validatedBody.rating,
+            comment: validatedBody.comment
+        };
+
+        // const reviewerProfile = await findProfileById(reviewer_id);
+        // const sellerProfile = await findProfileById(seller_id);
+
+        const review = await prisma.review.create({
+            data: {
+                ...dataToInsert,
+                profile_review_reviewer_idToprofile: {
+                    connectOrCreate: {
+                        where: {
+                            id: reviewer_id
+                        },
+                        create: {
+                            ...reviewer_profile
+                        }
+                    }
+                },
+                profile_review_seller_idToprofile: {
+                    connectOrCreate: {
+                        where: {
+                            id: seller_id
+                        },
+                        create: {
+                            ...seller_profile
+                        }
+                    }
+                }
+            },
+            include: {
+                profile_review_reviewer_idToprofile: true,
+                profile_review_seller_idToprofile: true
+            }
+        });
+
+        console.log("review added");
+        res.status(201).send(review);
+    } catch (e) {
+        console.error("Error: " + e);
+        return res.status(500).json({
+            error: "An error occurred",
+            details: e.message
+        });
+    }
+};
 
 // export const updateReview = async (req, res) => {
 //     try {

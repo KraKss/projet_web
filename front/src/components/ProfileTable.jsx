@@ -30,7 +30,7 @@ const ProfileTable = () => {
 
     const columns = ['name', 'email', 'id', 'address', 'bank_account', 'balance'];
 
-    return <DataTable data={profiles} columns={columns} actions={true} />;
+    return <DataTable data={profiles} columns={columns} />;
 };
 
 export default ProfileTable;

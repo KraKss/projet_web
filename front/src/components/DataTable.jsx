@@ -1,6 +1,6 @@
 import styles from '../styles/DataTable.module.css';
 
-const DataTable = ({ data, columns, actions }) => {
+const DataTable = ({ data, columns, seeJoinedTable }) => {
     return (
         <div className={styles.container}>
             <table className={styles.profileTable}>
@@ -10,7 +10,7 @@ const DataTable = ({ data, columns, actions }) => {
                     {columns.map((col) => (
                         <th key={col}>{col}</th>
                     ))}
-                    {actions && <th>Actions</th>}
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -21,18 +21,18 @@ const DataTable = ({ data, columns, actions }) => {
                             {columns.map((col) => (
                                 <td key={col}>{row[col]}</td>
                             ))}
-                            {actions && (
-                                <td>
-                                    {/*Laissez champs vides si pas de modif*/}
-                                    <button className={styles.editButton}>✏️</button>
-                                    <button className={styles.deleteButton}>🗑️</button>
-                                </td>
-                            )}
+                            <td>
+
+                                <button className={styles.editButton}>✏️</button>
+                                <button className={styles.deleteButton}>🗑️</button>
+                                {seeJoinedTable && <button className={styles.deleteButton}>👀</button>}
+                            </td>
+
                         </tr>
                     ))
                 ) : (
                     <tr>
-                        <td colSpan={columns.length + (actions ? 1 : 0)}>Aucune donnée disponible</td>
+                        <td colSpan={columns.length}>Aucune donnée disponible</td>
                     </tr>
                 )}
                 </tbody>

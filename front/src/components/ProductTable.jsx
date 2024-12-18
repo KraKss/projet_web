@@ -8,7 +8,7 @@ const ProductTable = () => {
 
     const columns = ['product_id', 'seller_id', 'name', 'description', 'price', 'filament_type'];
 
-    return <DataTable data={products} columns={columns} actions={true} />;
+    return <DataTable data={products} columns={columns} />;
 };
 
 export default ProductTable;

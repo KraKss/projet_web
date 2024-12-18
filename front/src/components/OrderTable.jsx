@@ -8,7 +8,7 @@ const OrderTable = () => {
 
     const columns = ['order_id', 'buyer_id', 'payment_status', 'shipping_status', 'order_date'];
 
-    return <DataTable data={orders} columns={columns} actions={true} />;
+    return <DataTable data={orders} columns={columns} seeJoinedTable={true} />;
 };
 
 export default OrderTable;

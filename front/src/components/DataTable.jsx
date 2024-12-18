@@ -1,76 +1,45 @@
-import React, { useState } from "react";
-import styles from "../styles/DataTable.module.css";
-import Pagination from "./Pagination.jsx";
-import SearchBar  from "./SearchBar.jsx";
+import styles from '../styles/DataTable.module.css';
 
-const DataTable = ({ data, columns, actions }) => {
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 5;
-    const [searchQuery, setSearchQuery] = useState("");
-
-    const filteredData = data.filter((row) =>
-        columns.some((col) =>
-            row[col]?.toString().toLowerCase().includes(searchQuery.toLowerCase())
-        )
-    );
-
-    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-    const indexOfLastRow = currentPage * rowsPerPage;
-    const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-    const currentData = filteredData.slice(indexOfFirstRow, indexOfLastRow);
-
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
-
-    const handleSearch = (query) => {
-        setSearchQuery(query);
-        setCurrentPage(1);
-    };
-
+const DataTable = ({ data, columns, seeJoinedTable }) => {
     return (
         <div className={styles.container}>
             <table className={styles.profileTable}>
                 <thead>
                 <tr>
+
                     {columns.map((col) => (
                         <th key={col}>{col}</th>
                     ))}
-                    {actions && <th>Actions</th>}
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                {currentData && currentData.length > 0 ? (
-                    currentData.map((row, index) => (
+                {data && data.length > 0 ? (
+                    data.map((row, index) => (
                         <tr key={index}>
+                            {/* Affiche chaque ligne de données dynamiquement */}
                             {columns.map((col) => (
                                 <td key={col}>{row[col]}</td>
                             ))}
-                            {actions && (
-                                <td>
-                                    <button className={styles.editButton} >✏️</button>
-                                    <button className={styles.deleteButton}>🗑️</button>
-                                </td>
-                            )}
+                            <td>
+
+                                <button className={styles.editButton}>✏️</button>
+                                <button className={styles.deleteButton}>🗑️</button>
+                                {seeJoinedTable && <button className={styles.deleteButton}>👀</button>}
+                            </td>
+
                         </tr>
                     ))
                 ) : (
                     <tr>
-                        <td colSpan={columns.length + (actions ? 1 : 0)}>
-                            No data available.
-                        </td>
+                        <td colSpan={columns.length}>Aucune donnée disponible</td>
                     </tr>
                 )}
                 </tbody>
             </table>
-            <footer>
-                <Pagination
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    onPageChange={handlePageChange}
-                />
-                <SearchBar placeholder="Search..." onSearch={handleSearch}  />
+            <footer className={styles.pagination}>
+                <input type="text" placeholder="Search" className={styles.searchInput} />
+                <span>1</span>
             </footer>
         </div>
     );

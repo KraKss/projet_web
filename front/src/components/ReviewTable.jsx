@@ -8,7 +8,7 @@ const ReviewTable = () => {
 
     const columns = ['reviewer_id', 'seller_id', 'rating', 'comment', 'review_date'];
 
-    return <DataTable data={reviews} columns={columns} actions={false} />;
+    return <DataTable data={reviews} columns={columns} />;
 };
 
 export default ReviewTable;

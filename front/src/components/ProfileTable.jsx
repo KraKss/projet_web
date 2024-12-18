@@ -1,6 +1,7 @@
 import DataTable from './DataTable';
 import {useEffect, useState} from "react";
 import {getProfileByID} from "../API/http.js";
+import ProfileForm from "./Form/ProfileForm.jsx";
 
 const ProfileTable = () => {
     const [profiles, setProfiles] = useState([]);
@@ -30,7 +31,23 @@ const ProfileTable = () => {
 
     const columns = ['name', 'email', 'id', 'address', 'bank_account', 'balance'];
 
-    return <DataTable data={profiles} columns={columns} />;
+    const addProfile = (newProfile) => {
+        setProfiles((prevProfiles) => [
+            ...prevProfiles,
+            { ...newProfile, id: prevProfiles.length + 1 },
+        ]);
+    }
+    
+
+    return (
+        <div>
+            <DataTable
+                data={profiles}
+                columns={columns}
+                form={<ProfileForm onSubmit={addProfile} dataUpdate={null} />}
+            />
+        </div>
+    );
 };
 
 export default ProfileTable;

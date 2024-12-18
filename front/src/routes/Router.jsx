@@ -1,6 +1,6 @@
 import {createBrowserRouter} from 'react-router-dom';
 
-import {Home, Profile, Orders, Review, Products} from "../pages/index.js";
+import {Home, Profile, Orders, OrdersItems, Review, Products} from "../pages/index.js";
 import {ROUTES} from './routesPath';
 
 const router = createBrowserRouter([
@@ -15,6 +15,10 @@ const router = createBrowserRouter([
     {
         path: ROUTES.ORDERS_ROUTE,
         element: <Orders/>
+    },
+    {
+        path: ROUTES.ORDERS_ITEMS_ROUTE,
+        element: <OrdersItems/>
     },
     {
         path: ROUTES.REVIEW_ROUTE,

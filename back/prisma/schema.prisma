@@ -56,7 +56,7 @@ model profile {
 model review {
   reviewer_id                         Int
   seller_id                           Int
-  rating                              Int?      @default(0)
+  rating                              Int       @default(0)
   comment                             String?
   review_date                         DateTime? @default(now()) @db.Timestamp(6)
   profile_review_reviewer_idToprofile profile   @relation("review_reviewer_idToprofile", fields: [reviewer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)

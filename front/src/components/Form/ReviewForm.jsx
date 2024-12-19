@@ -64,8 +64,6 @@ const ReviewForm = ({ dataUpdate }) => {
                 onCancel={onCancel}
                 register={register}
             />
-            <pre>{JSON.stringify(watch(), null, 2)}</pre> {/* Visualisation des valeurs en temps réel */}
-
         </>
     );
 };

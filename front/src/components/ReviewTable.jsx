@@ -22,7 +22,10 @@ const ReviewTable = () => {
             <DataTable
                 data={reviews}
                 columns={columns}
-                form={<ReviewForm onSubmit={addReview} dataUpdate={null} />}
+                form={( dataUpdate = null) => {
+                    console.log(dataUpdate);
+                    return <ReviewForm  dataUpdate={dataUpdate}/>}
+                }
             />
         </div>
     );

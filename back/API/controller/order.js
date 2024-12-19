@@ -1,5 +1,5 @@
 import prisma from "../../database/databseORM.js";
-import {orderSchema, updateOrderSchema} from "../../validator/order.js";
+import {orderSchema, updateOrderSchema} from "../middleware/validator/order.js";
 
 export const getOrderById = async (req, res)=> {
     try {

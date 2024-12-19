@@ -1,5 +1,5 @@
 import prisma from "../../database/databseORM.js";
-import {productSchema, updateProductSchema} from "../../validator/product.js";
+import {productSchema, updateProductSchema} from "../middleware/validator/product.js";
 
 export const getProductById = async (req, res)=> {
     try {

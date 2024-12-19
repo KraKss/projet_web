@@ -8,5 +8,4 @@ router.patch("/", updateProfile);
 router.get("/:id", getProfileById);
 router.delete("/:id", deleteProfileById);
 
-
 export default router;

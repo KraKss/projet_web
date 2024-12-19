@@ -1,5 +1,5 @@
 import prisma from "../../database/databseORM.js";
-import {profileSchema, updateProfileSchema} from "../../validator/profile.js";
+import {profileSchema, updateProfileSchema} from "../middleware/validator/profile.js";
 import {hash} from "../../utils/hash.js";
 
 export const getProfileById = async (req, res)=> {

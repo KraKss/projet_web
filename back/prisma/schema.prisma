@@ -65,6 +65,13 @@ model review {
   @@id([reviewer_id, seller_id])
 }
 
+model manager {
+  id       Int     @id @default(autoincrement())
+  name     String? @db.VarChar
+  email    String? @unique @db.VarChar
+  password String? @db.VarChar
+}
+
 enum payment_status {
   pending
   completed

@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS Filament;
 DROP TABLE IF EXISTS Seller;
 DROP TABLE IF EXISTS Review;
 DROP TABLE IF EXISTS Profile;
+DROP TABLE IF EXISTS manager CASCADE;
 DROP TYPE IF EXISTS payment_status;
 DROP TYPE IF EXISTS shipping_status;
 
@@ -20,6 +21,17 @@ CREATE TABLE Profile (
 
 );
 
+CREATE TABLE manager(
+                        id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+                        name varchar,
+                        email varchar UNIQUE,
+                        password varchar
+);
+
+
+INSERT INTO manager (name, email, password)
+VALUES ('John', 'john@mail.com', 'password');
+
 
 CREATE TABLE Review (
                         reviewer_id INT NOT NULL,
@@ -31,8 +43,8 @@ CREATE TABLE Review (
                         review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
                         PRIMARY KEY (reviewer_id, seller_id),
-                        FOREIGN KEY (seller_id) REFERENCES Profile(user_id),
-                        FOREIGN KEY (reviewer_id) REFERENCES Profile(user_id)
+                        FOREIGN KEY (seller_id) REFERENCES Profile(id),
+                        FOREIGN KEY (reviewer_id) REFERENCES Profile(id)
 );
 
 
@@ -43,7 +55,7 @@ CREATE TABLE Product (
                          description TEXT,
                          price DECIMAL(10, 2) NOT NULL,
                          filament_type INT,
-                         FOREIGN KEY (seller_id) REFERENCES Profile(user_id)
+                         FOREIGN KEY (seller_id) REFERENCES Profile(id)
 );
 
 CREATE TYPE payment_status AS ENUM ('pending', 'completed', 'failed');
@@ -55,7 +67,7 @@ CREATE TABLE Orders (
                         payment_status payment_status DEFAULT 'pending',
                         shipping_status shipping_status DEFAULT 'not_shipped',
                         order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        FOREIGN KEY (buyer_id) REFERENCES Profile(user_id)
+                        FOREIGN KEY (buyer_id) REFERENCES Profile(id)
 );
 
 CREATE TABLE Order_Items (

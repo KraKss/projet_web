@@ -22,6 +22,7 @@ const OrderTable = () => {
             <DataTable
                 data={orders}
                 columns={columns}
+                seeJoinedTable={true}
                 form={<OrderForm onSubmit={addOrder} dataUpdate={null} />}
             />
         </div>

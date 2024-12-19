@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import DataTable from './DataTable';
 import ProductForm from './Form/ProductForm.jsx';
 
@@ -10,6 +10,7 @@ const ProductTable = () => {
         { product_id: 4, seller_id: 5, name: 'Resin', description: 'High-quality resin for printing', price: 50, filament_type: 'Resin' },
         { product_id: 5, seller_id: 6, name: '3D Scanner', description: 'Portable 3D scanner', price: 1200, filament_type: null },
         { product_id: 6, seller_id: 7, name: '3D Pen', description: '3D pen for drawing', price: 50, filament_type: 'PLA' },
+        { product_id: 7, seller_id: 1, name: '3D test', description: 'test', price: 150, filament_type: null },
     ]);
 
     const columns = ['product_id', 'seller_id', 'name', 'description', 'price', 'filament_type'];

@@ -4,8 +4,9 @@ import Pagination from "./Pagination.jsx";
 import SearchBar  from "./SearchBar.jsx";
 import { Link } from "react-router-dom";
 import {ROUTES} from "../routes/routesPath.js";
+import log from "eslint-plugin-react/lib/util/log.js";
 
-const DataTable = ({ data, columns, seeJoinedTable,form}) => {
+const DataTable = ({ data, columns, seeJoinedTable, form}) => {
 
     const [isAdding, setIsAdding] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);

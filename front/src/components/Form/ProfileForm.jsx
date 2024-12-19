@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import Form from './Form.jsx';
 import { useForm } from 'react-hook-form';
 
-const ProfileForm = ({ dataUpdate, onCancel }) => {
+const ProfileForm = ({ dataUpdate }) => {
 
     const idExist = dataUpdate?.user_id !== undefined;
 
@@ -16,8 +16,9 @@ const ProfileForm = ({ dataUpdate, onCancel }) => {
         bank_account: Yup.string()
             .matches(/^[A-Za-z]{2}\d+$/, 'invalid')
             .min(6, 'bank_account must be at least 6 characters')
-            .max(20, 'bank_account must not exceed 20 characters'),
-        address: Yup.string().max(100, 'Address max 100 digits'),
+            .max(20, 'bank_account must not exceed 20 characters')
+            .required('bank_account is required'),
+        address: Yup.string().required('Address is required').max(100, 'Address max 100 digits'),
         password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
         email: Yup.string().email('Invalid email format').required('Email is required'),
         name: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
@@ -66,14 +67,20 @@ const ProfileForm = ({ dataUpdate, onCancel }) => {
 
         for (const [key, value] of Object.entries(data)) {
             if (value instanceof FileList) {
+                // Si la valeur est un FileList, ajoutez chaque fichier individuellement
                 Array.from(value).forEach((file) => formData.append(key, file));
             } else {
+                // Sinon, ajoutez simplement la valeur
                 formData.append(key, value);
             }
         }
 
         console.log(formData);
 
+    };
+
+    const onCancel = () => {
+        console.log("Form submission cancelled");
     };
 
     return (
@@ -86,6 +93,7 @@ const ProfileForm = ({ dataUpdate, onCancel }) => {
             register={register}
         />
             <pre>{JSON.stringify(watch(), null, 2)}</pre> {/* Visualisation des valeurs en temps réel */}
+
         </>
     );
 };

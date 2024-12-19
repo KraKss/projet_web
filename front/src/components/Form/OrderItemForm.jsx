@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import Form from './Form';
 
-const OrderItemForm = ({ dataUpdate,onCancel }) => {
+const OrderItemForm = ({ dataUpdate }) => {
 
     const validationSchema = Yup.object().shape({
         order_id: Yup.number().integer('Order ID must be an integer').required('Order ID is required'),
@@ -53,6 +53,10 @@ const OrderItemForm = ({ dataUpdate,onCancel }) => {
         } else {
             console.log("New Data:", data);
         }
+    };
+
+    const onCancel = () => {
+        console.log("Form submission cancelled");
     };
 
     return (

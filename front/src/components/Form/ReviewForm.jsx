@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import Form from './Form.jsx';
 import { useForm } from 'react-hook-form';
 
-const ReviewForm = ({ dataUpdate,onCancel }) => {
+const ReviewForm = ({ dataUpdate }) => {
     const idExist = dataUpdate?.reviewer_id !== undefined;
 
     const validationSchema = Yup.object().shape({
@@ -49,6 +49,10 @@ const ReviewForm = ({ dataUpdate,onCancel }) => {
 
         console.log(formData);
 
+    };
+
+    const onCancel = () => {
+        console.log("Form submission cancelled");
     };
 
     return (

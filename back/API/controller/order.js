@@ -1,11 +1,11 @@
 import prisma from "../../database/databseORM.js";
-import {orderSchema} from "../../validator/order.js";
+import {orderSchema, updateOrderSchema} from "../../validator/order.js";
 
 export const getOrderById = async (req, res)=> {
     try {
         const order = await prisma.orders.findUnique({
             where: {
-                id: parseInt(req.params.id)
+                order_id: parseInt(req.params.id)
             },
         });
 
@@ -20,52 +20,95 @@ export const getOrderById = async (req, res)=> {
 
 export const addOrder = async (req, res) => {
     try {
-        const {order_id, buyer_id, payment_status, shipping_status} = req.body;
+        const {buyer_id, payment_status, shipping_status} = req.body;
 
         const validatedBody = orderSchema.parse({
-            order_id, buyer_id, payment_status, shipping_status
+            buyer_id, payment_status, shipping_status
         })
 
-        prisma.orders.create({
+        // remove buyerId to join profile table (if profile doesn't exist => error)
+        const validatedData = {
+            payment_status: validatedBody.payment_status,
+            shipping_status: validatedBody.shipping_status
+        };
+
+        const order = await prisma.orders.create({
             data: {
-            ...validatedBody
+                ...validatedData,
+                profile: {
+                    connect: {
+                        id: validatedBody.buyer_id
+                    }
+                }
             },
-            select: {
-                id: true
+            include: {
+                profile: true
             }
         })
 
-        // const review = await prisma.review.create({
-        //     data: {
-        //         ...dataToInsert,
-        //         profile_review_reviewer_idToprofile: reviewer_profile // demdande au prof si conditionnel ou obliger connectOrCreate
-        //             ? {
-        //                 connectOrCreate: {
-        //                     where: { id: reviewer_id },
-        //                     create: { ...reviewer_profile }
-        //                 }
-        //             }
-        //             : { connect: { id: reviewer_id } },
-        //
-        //         profile_review_seller_idToprofile: seller_profile
-        //             ? {
-        //                 connectOrCreate: {
-        //                     where: { id: seller_id },
-        //                     create: { ...seller_profile }
-        //                 }
-        //             }
-        //             : { connect: { id: seller_id } }
-        //     },
-        //     include: {
-        //         profile_review_reviewer_idToprofile: true,
-        //         profile_review_seller_idToprofile: true
-        //     }
-        // });
 
-        console.log("order created")
+        console.log(`order created`)
         res.status(201).send(order);
     } catch (e) {
-        console.error(e);
+        const errorMessage = e.code === "P2025" ? `Profile with ID ${req.body.buyer_id} doesn't exist` : e.message
+        console.error(errorMessage);
+        return res.status(500).json({
+            error: "une erreur est survenue",
+            details: errorMessage
+        });
+    }
+}
+
+export const updateOrder = async (req, res) => {
+    try {
+        const {order_id, buyer_id, payment_status, shipping_status} = req.body;
+
+        const validatedBody = updateOrderSchema.parse({
+            order_id, buyer_id, payment_status, shipping_status
+        })
+
+        const validatedData = {
+            payment_status: validatedBody.payment_status,
+            shipping_status: validatedBody.shipping_status
+        }
+
+        if (validatedData.payment_status === undefined && validatedData.shipping_status === undefined)
+            return res.status(400).json({
+                error: "No data provided to update order"
+            });
+
+        const includeProfile = validatedBody.buyer_id !== undefined;
+
+        const order = includeProfile
+            ? await prisma.orders.update({
+                where: {
+                    id: validatedBody.order_id
+                },
+                data: {
+                    ...validatedData,
+                    profile: {
+                        connect: {
+                            id: validatedBody.buyer_id
+                        }
+                    }
+                },
+                include: {
+                    profile: true
+                }
+            })
+            : await prisma.orders.update({
+                where: {
+                    id: validatedBody.order_id
+                },
+                data: {
+                    ...validatedData
+                }
+            })
+
+        console.log(`order updated`)
+        res.status(201).send(order);
+    } catch (e) {
+        console.error(e.message);
         return res.status(500).json({
             error: "une erreur est survenue",
             details: e.message
@@ -73,47 +116,18 @@ export const addOrder = async (req, res) => {
     }
 }
 
-// export const updateProfile = async (req, res) => {
-//     try {
-//         const {id, name, email, password, address, bank_account, balance} = req.body;
-//
-//         const validateBody = updateProfileSchema.parse({
-//             name, email, password, address, bank_account, balance
-//         })
-//
-//         const updateData = {};
-//         if (validateBody.name !== undefined) updateData.name = name;
-//         if (validateBody.email !== undefined) updateData.email = email;
-//         if (validateBody.password !== undefined) updateData.password = await hash(password, 10);
-//         if (validateBody.address !== undefined) updateData.address = address;
-//         if (validateBody.bank_account !== undefined) updateData.bank_account = bank_account;
-//         if (validateBody.balance !== undefined) updateData.balance = balance;
-//
-//         await prisma.profile.update({
-//             data: updateData,
-//             where: {
-//                 id: id
-//             }
-//         })
-//         console.log("profile updated")
-//         res.sendStatus(204);
-//     } catch (e) {
-//         console.log(e);
-//         res.sendStatus(500);
-//     }
-// }
-//
-// export const deleteProfileById = async (req, res) => {
-//     try {
-//         await prisma.profile.delete({
-//             where: {
-//                 id: parseInt(req.params.id)
-//             }
-//         })
-//         console.log(`profile ${req.params.id} deleted`)
-//         res.sendStatus(204);
-//     } catch (e) {
-//         console.log(e);
-//         res.sendStatus(500);
-//     }
-// }
+export const deleteOrderById = async (req, res) => {
+    try {
+        await prisma.orders.delete({
+            where: {
+                id: parseInt(req.params.id)
+            }
+        })
+
+        console.log(`order ${req.params.id} deleted`)
+        res.sendStatus(204);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+}

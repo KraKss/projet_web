@@ -14,7 +14,7 @@ const ReviewForm = ({ dataUpdate }) => {
         comment: Yup.string().required('Comment is required').max(500, 'Comment cannot exceed 500 characters'),
     });
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register,watch, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(validationSchema),
     });
 
@@ -33,12 +33,22 @@ const ReviewForm = ({ dataUpdate }) => {
     ];
 
     const onSubmit = (data) => {
-        console.log("Review Form Submitted", data);
+        console.log("watch ici ",watch())
         if (dataUpdate) {
-            console.log("Updated Review", { ...dataUpdate, ...data });
+            console.log("", { ...dataUpdate, ...data });
         } else {
-            console.log("New Review", data);
+            console.log("data", data);
         }
+
+        const formData = new FormData();
+
+        for (const [key, value] of Object.entries(data)) {
+            formData.append(key, value);
+
+        }
+
+        console.log(formData);
+
     };
 
     const onCancel = () => {
@@ -46,11 +56,17 @@ const ReviewForm = ({ dataUpdate }) => {
     };
 
     return (
-        <Form
-            fields={fields}
-            onSubmit={handleSubmit(onSubmit)}
-            onCancel={onCancel}
-        />
+        <>
+            <Form
+                fields={fields}
+                onSubmit={onSubmit}
+                handleSubmit={handleSubmit}
+                onCancel={onCancel}
+                register={register}
+            />
+            <pre>{JSON.stringify(watch(), null, 2)}</pre> {/* Visualisation des valeurs en temps réel */}
+
+        </>
     );
 };
 

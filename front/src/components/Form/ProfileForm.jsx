@@ -26,9 +26,10 @@ const ProfileForm = ({ dataUpdate }) => {
             .transform((value, originalValue) => (originalValue === "" ? null : value))
     });
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register,watch, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(validationSchema),
     });
+
 
     const fields = [
         ...(idExist ? [{
@@ -39,6 +40,7 @@ const ProfileForm = ({ dataUpdate }) => {
             readOnly: true,
             error: errors.user_id?.message,
         }] : []),
+        { name: 'image', label: 'Avatar', type: 'file', accept: "image/*",defaultValue: dataUpdate?.image || '', error: errors.name?.message },
         { name: 'name', label: 'Name', type: 'text', defaultValue: dataUpdate?.name || '', error: errors.name?.message },
         { name: 'email', label: 'Email', type: 'email', defaultValue: dataUpdate?.email || '', error: errors.email?.message },
         { name: 'password', label: 'Password', type: 'password', defaultValue: dataUpdate?.password, error: errors.password?.message },
@@ -48,12 +50,33 @@ const ProfileForm = ({ dataUpdate }) => {
     ];
 
     const onSubmit = (data) => {
-        console.log("", data);
+        console.log("watch ici ",watch())
+        /*
+        for (const [key, value] of Object.entries(watch())) {
+            console.log(key, value);
+        }
+         */
+
         if (dataUpdate) {
             console.log("", { ...dataUpdate, ...data });
         } else {
-            console.log("", data);
+            console.log("data", data);
         }
+
+        const formData = new FormData();
+
+        for (const [key, value] of Object.entries(data)) {
+            if (value instanceof FileList) {
+                // Si la valeur est un FileList, ajoutez chaque fichier individuellement
+                Array.from(value).forEach((file) => formData.append(key, file));
+            } else {
+                // Sinon, ajoutez simplement la valeur
+                formData.append(key, value);
+            }
+        }
+
+        console.log(formData);
+
     };
 
     const onCancel = () => {
@@ -61,11 +84,17 @@ const ProfileForm = ({ dataUpdate }) => {
     };
 
     return (
+        <>
         <Form
             fields={fields}
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={onSubmit}
+            handleSubmit={handleSubmit}
             onCancel={onCancel}
+            register={register}
         />
+            <pre>{JSON.stringify(watch(), null, 2)}</pre> {/* Visualisation des valeurs en temps réel */}
+
+        </>
     );
 };
 

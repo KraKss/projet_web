@@ -29,7 +29,7 @@ const ProfileTable = () => {
         fetchData();
     }, []);
 
-    const columns = ['name', 'email', 'id', 'address', 'bank_account', 'balance'];
+    const columns = ['image','name', 'email', 'id', 'address', 'bank_account', 'balance'];
 
     const addProfile = (newProfile) => {
         setProfiles((prevProfiles) => [

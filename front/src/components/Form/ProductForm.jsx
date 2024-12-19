@@ -7,7 +7,6 @@ import Form from './Form.jsx'; // Composant Form
 const ProductForm = ({ dataUpdate}) => {
 
     const validationSchema = Yup.object().shape({
-        product_id: Yup.number().positive("Must be positive").integer("Must be entire").nullable(),
         seller_id: Yup.number().required("Seller ID is required").positive("Must be positive").integer("Must be entire"),
         name: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
         description: Yup.string().nullable().max(1024, 'Maximum 1024 characters'),
@@ -17,6 +16,7 @@ const ProductForm = ({ dataUpdate}) => {
 
     const {
         register,
+        watch,
         handleSubmit,
         formState: { errors },
     } = useForm({
@@ -29,7 +29,7 @@ const ProductForm = ({ dataUpdate}) => {
             name: 'product_id',
             label: 'Product ID',
             type: 'number',
-            defaultValue: dataUpdate?.product_id || '',
+            defaultValue: dataUpdate?.product_id || null,
             readOnly: true,
             error: errors.product_id?.message,
         },
@@ -71,24 +71,35 @@ const ProductForm = ({ dataUpdate}) => {
     ];
 
     const onSubmit = (data) => {
-        console.log("", data);
         if (dataUpdate) {
             console.log("", { ...dataUpdate, ...data });
         } else {
             console.log("", data);
         }
+
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(data)) {
+            formData.append(key, value);
+        }
+        console.log(formData);
     };
 
     const onCancel = () => {
         console.log("Form submission cancelled");
-    };;
+    };
 
     return (
-        <Form
-            fields={fields}
-            onSubmit={handleSubmit(onSubmit)}
-            onCancel={onCancel}
-        />
+        <>
+            <Form
+                fields={fields}
+                onSubmit={onSubmit}
+                handleSubmit={handleSubmit}
+                onCancel={onCancel}
+                register={register}
+            />
+            <pre>{JSON.stringify(watch(), null, 2)}</pre> {/* Visualisation des valeurs en temps réel */}
+
+        </>
     );
 };
 

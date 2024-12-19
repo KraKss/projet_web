@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import Form from './Form.jsx'; // Composant Form
 
 
-const ProductForm = ({ dataUpdate,onCancel}) => {
+const ProductForm = ({ dataUpdate}) => {
 
     const validationSchema = Yup.object().shape({
         seller_id: Yup.number().required("Seller ID is required").positive("Must be positive").integer("Must be entire"),
@@ -84,6 +84,9 @@ const ProductForm = ({ dataUpdate,onCancel}) => {
         console.log(formData);
     };
 
+    const onCancel = () => {
+        console.log("Form submission cancelled");
+    };
 
     return (
         <>

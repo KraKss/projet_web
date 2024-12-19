@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import DataTable from './DataTable';
+import { useEffect, useState } from 'react';
 import OrderItemForm from './Form/OrderItemForm.jsx';
 
 const OrderItemsTable = () => {
     const [orderItems, setOrderItems] = useState([]);
-    const [isAdding, setIsAdding] = useState(false);
-    const [currentOrderItem, setCurrentOrderItem] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,26 +23,6 @@ const OrderItemsTable = () => {
             ...prevOrderItems,
             { ...newOrderItem, order_id: prevOrderItems.length + 1 },
         ]);
-        setIsAdding(false);
-    };
-
-    const editOrderItem = (updatedOrderItem) => {
-        setOrderItems((prevOrderItems) =>
-            prevOrderItems.map((item) =>
-                item.order_id === updatedOrderItem.order_id ? updatedOrderItem : item
-            )
-        );
-        setIsAdding(false);
-    };
-
-    const handleAdd = () => {
-        setCurrentOrderItem(null);
-        setIsAdding(true);
-    };
-
-    const handleEdit = (orderItem) => {
-        setCurrentOrderItem(orderItem);
-        setIsAdding(true);
     };
 
     return (
@@ -52,17 +30,8 @@ const OrderItemsTable = () => {
             <DataTable
                 data={orderItems}
                 columns={columns}
-                seeJoinedTable={false}
-                onAdd={handleAdd}
-                onEdit={handleEdit}
+                form={<OrderItemForm onSubmit={addOrderItem} dataUpdate={null} />}
             />
-            {isAdding && (
-                <OrderItemForm
-                    dataUpdate={currentOrderItem}
-                    onSubmit={currentOrderItem ? editOrderItem : addOrderItem}
-                    onCancel={() => setIsAdding(false)}
-                />
-            )}
         </div>
     );
 };

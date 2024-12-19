@@ -9,6 +9,7 @@ import {usePopup} from "../provider/PopUpProvider.jsx";
 
 const DataTable = ({ data, columns, seeJoinedTable, form}) => {
 
+    console.log("fgbdfjhgkdjfhgkjdfhgjkdfhgkj");
     const { showPopup,hidePopup } = usePopup();
 
     const handlePopupForm = (data = null) => {
@@ -49,15 +50,11 @@ const DataTable = ({ data, columns, seeJoinedTable, form}) => {
 
     return (
         <div className={styles.container}>
-            {isAdding ? (
-                <div className={styles.formOverlay}>
-                    {React.cloneElement(form, { onSubmit: handleFormSubmit })}
-                </div>
-            ) : (
+
                 <button className={styles.addButton} onClick={() => {handlePopupForm()}}>
                     ➕ Add New
                 </button>
-            )}
+
             <table className={styles.profileTable}>
                 <thead>
                 <tr>

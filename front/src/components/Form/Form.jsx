@@ -3,7 +3,7 @@ import Popup from "../Popup.jsx";
 import InputFields from "../InputFields.jsx";
 
 const Form = ({ fields = [], onSubmit, register, handleSubmit }) => {
-    const [isVisible, setIsVisible] = useState(false); // Contrôle du popup
+    const [isVisible, setIsVisible] = useState(true); // Contrôle du popup
 
 
 
@@ -14,24 +14,9 @@ const Form = ({ fields = [], onSubmit, register, handleSubmit }) => {
 
     return (
         <div>
-            <button
-                style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#007BFF",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    fontSize: "1em",
-                }}
-                onClick={() => setIsVisible(true)}
-            >
-                Add Profile
-            </button>
 
-            <Popup isVisible={isVisible} onClose={handleCancel}>
                 <div style={{ padding: "10px" }}>
-                    <h2 style={{ textAlign: "center", color: "#333" }}>Add Profile</h2> {/* TODO changé le nom la et pk appuyé 2 fois sur le bouton*/}
+                    <h2 style={{ textAlign: "center", color: "#333" }}>{fields[0].defaultValue ? "UPDATE":'ADD'}</h2>
                     <form onSubmit={handleSubmit(onSubmit)}>
 
                         {fields.map((field, index) => (
@@ -68,7 +53,7 @@ const Form = ({ fields = [], onSubmit, register, handleSubmit }) => {
                         </div>
                     </form>
                 </div>
-            </Popup>
+
         </div>
     );
 };

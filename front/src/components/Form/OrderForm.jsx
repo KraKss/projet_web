@@ -4,9 +4,8 @@ import * as Yup from 'yup';
 import Form from './Form.jsx';
 import { useForm } from 'react-hook-form';
 
-const OrderForm = ({ dataUpdate }) => {
+const OrderForm = ({ dataUpdate,onCancel}) => {
     const idExist = dataUpdate?.order_id !== undefined;
-
     const validationSchema = Yup.object().shape({
         order_id: Yup.number().integer("Must be an integer").positive("Must be positive").nullable(),
         buyer_id: Yup.number().integer("Must be an integer").positive("Must be positive").required('Buyer ID is required'),
@@ -48,10 +47,6 @@ const OrderForm = ({ dataUpdate }) => {
 
         console.log(formData);
 
-    };
-
-    const onCancel = () => {
-        console.log("Form submission cancelled");
     };
 
     return (

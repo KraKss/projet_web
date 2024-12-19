@@ -1,20 +1,25 @@
-import React, { useState } from 'react';
-import DataTable from './DataTable';
-import ReviewForm from './Form/ReviewForm.jsx';
+import { useState } from "react";
+import DataTable from "./DataTable";
+import ReviewForm from "./Form/ReviewForm.jsx";
 
 const ReviewTable = () => {
-    const [reviews, setReviews] = useState([
-        { reviewer_id: 1, seller_id: 2, rating: 5, comment: 'Great product!', review_date: '2024-12-01' },
-        { reviewer_id: 2, seller_id: 3, rating: 4, comment: 'Good quality', review_date: '2024-12-02' },
-    ]);
+    const [reviews, setReviews] = useState([]);
+    const [isAdding, setIsAdding] = useState(false);
+    const [currentReview, setCurrentReview] = useState(null);
 
-    const columns = ['reviewer_id', 'seller_id', 'rating', 'comment', 'review_date'];
+    const columns = ["reviewer_id", "seller_id", "rating", "comment", "review_date"];
 
-    const addReview = (newReview) => {
+    const handleAddReview = (newReview) => {
         setReviews((prevReviews) => [
             ...prevReviews,
-            { ...newReview, review_date: new Date().toISOString().split('T')[0] },
+            { ...newReview, id: prevReviews.length + 1 },
         ]);
+        setIsAdding(false);
+    };
+
+    const handleEditReview = (review) => {
+        setCurrentReview(review);
+        setIsAdding(true);
     };
 
     return (
@@ -22,8 +27,20 @@ const ReviewTable = () => {
             <DataTable
                 data={reviews}
                 columns={columns}
-                form={<ReviewForm onSubmit={addReview} dataUpdate={null} />}
+                seeJoinedTable={false}
+                onEdit={handleEditReview}
+                onAdd={() => {
+                    setCurrentReview(null);
+                    setIsAdding(true);
+                }}
             />
+            {isAdding && (
+                <ReviewForm
+                    dataUpdate={currentReview}
+                    onSubmit={handleAddReview}
+                    onCancel={() => setIsAdding(false)} // Annulation
+                />
+            )}
         </div>
     );
 };

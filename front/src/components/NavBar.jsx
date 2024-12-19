@@ -2,6 +2,8 @@ import NavButton from "./NavButton.jsx";
 import {ROUTES} from "../routes/routesPath.js";
 
 const NavBar = () => {
+    const currentTime = new Date().toLocaleTimeString();
+
     return (
         <div>
             <nav style={styles.nav}>
@@ -10,6 +12,7 @@ const NavBar = () => {
                 <NavButton name="Orders" route={ROUTES.ORDERS_ROUTE} />
                 <NavButton name="Review" route={ROUTES.REVIEW_ROUTE} />
                 <NavButton name="Products" route={ROUTES.PRODUCTS_ROUTE} />
+                <div>{currentTime}</div> {/* Affiche l'heure au chargement */}
             </nav>
         </div>
     )

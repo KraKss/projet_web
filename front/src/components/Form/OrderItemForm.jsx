@@ -14,6 +14,7 @@ const OrderItemForm = ({ dataUpdate }) => {
 
     const {
         register,
+        watch,
         handleSubmit,
         formState: { errors },
     } = useForm({
@@ -59,11 +60,17 @@ const OrderItemForm = ({ dataUpdate }) => {
     };
 
     return (
-        <Form
-            fields={fields}
-            onSubmit={handleSubmit(onSubmit)}
-            onCancel={onCancel}
-        />
+        <>
+            <Form
+                fields={fields}
+                onSubmit={onSubmit}
+                handleSubmit={handleSubmit}
+                onCancel={onCancel}
+                register={register}
+            />
+            <pre>{JSON.stringify(watch(), null, 2)}</pre> {/* Visualisation des valeurs en temps réel */}
+
+        </>
     );
 };
 

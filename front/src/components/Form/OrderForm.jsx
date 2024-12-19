@@ -14,7 +14,7 @@ const OrderForm = ({ dataUpdate }) => {
         shipping_status: Yup.string().required('Shipping Status is required').max(50, 'Shipping Status cannot exceed 50 characters'),
     });
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register,watch, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(validationSchema),
     });
 
@@ -33,12 +33,21 @@ const OrderForm = ({ dataUpdate }) => {
     ];
 
     const onSubmit = (data) => {
-        console.log("Order Form Submitted", data);
+        console.log("watch ici ",watch())
         if (dataUpdate) {
-            console.log("Updated Order", { ...dataUpdate, ...data });
+            console.log("", { ...dataUpdate, ...data });
         } else {
-            console.log("New Order", data);
+            console.log("data", data);
         }
+
+        const formData = new FormData();
+
+        for (const [key, value] of Object.entries(data)) {
+            formData.append(key, value);
+        }
+
+        console.log(formData);
+
     };
 
     const onCancel = () => {
@@ -46,11 +55,16 @@ const OrderForm = ({ dataUpdate }) => {
     };
 
     return (
+        <>
         <Form
             fields={fields}
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={onSubmit}
+            handleSubmit={handleSubmit}
             onCancel={onCancel}
+            register={register}
         />
+            <pre>{JSON.stringify(watch(), null, 2)}</pre>
+        </>
     );
 };
 

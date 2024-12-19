@@ -41,6 +41,7 @@ const Form = ({ fields = [], onSubmit, register, handleSubmit }) => {
                                 name={field.name}
                                 type={field.type || "text"}
                                 placeholder={field.placeholder || ""}
+                                defaultValue={field.defaultValue}
                                 error={field.error}
                                 readOnly={field.readOnly}
                                 accept={field?.accept ?? ""}

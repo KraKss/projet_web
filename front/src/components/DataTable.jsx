@@ -5,8 +5,22 @@ import SearchBar  from "./SearchBar.jsx";
 import { Link } from "react-router-dom";
 import {ROUTES} from "../routes/routesPath.js";
 import log from "eslint-plugin-react/lib/util/log.js";
+import {usePopup} from "../provider/PopUpProvider.jsx";
 
 const DataTable = ({ data, columns, seeJoinedTable, form}) => {
+
+    const { showPopup,hidePopup } = usePopup();
+
+    const handlePopupForm = (data = null) => {
+
+        console.log("data du form ici", data);
+
+        showPopup(
+            <div>
+                {form(data)}
+            </div>
+        );
+    };
 
     const [isAdding, setIsAdding] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -40,7 +54,7 @@ const DataTable = ({ data, columns, seeJoinedTable, form}) => {
                     {React.cloneElement(form, { onSubmit: handleFormSubmit })}
                 </div>
             ) : (
-                <button className={styles.addButton} onClick={() => setIsAdding(true)}>
+                <button className={styles.addButton} onClick={() => {handlePopupForm()}}>
                     ➕ Add New
                 </button>
             )}
@@ -61,7 +75,7 @@ const DataTable = ({ data, columns, seeJoinedTable, form}) => {
                                 <td key={col}>{row[col]}</td>
                             ))}
                             <td>
-                                <button className={styles.editButton}>✏️</button>
+                                <button className={styles.editButton} onClick={() => {handlePopupForm(row)}}>✏️</button>
                                 <button className={styles.deleteButton}>🗑️</button>
                                 <Link to={ROUTES.ORDERS_ITEMS_ROUTE}>
                                     {seeJoinedTable && <button className={styles.deleteButton}>👀</button>}

@@ -3,6 +3,7 @@ import {addProfile, deleteProfileById, getAllProfiles, updateProfile} from "../A
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
+import * as Yup from "yup";
 
 const ProfileTable = () => {
     const [profiles, setProfiles] = useState([]);
@@ -64,6 +65,28 @@ const ProfileTable = () => {
     const columns = ["id", "name", "email", "address", "bank_account", "balance"];
     const formFields = ["name", "email", "password", "address", "bank_account", "balance"];
 
+    const validationSchema = Yup.object().shape({
+        balance: Yup.number().integer("Must be an integer")
+            .nullable()
+            .transform((value, originalValue) => (originalValue === "" ? null : value))
+            .test(
+                "is-valid-id",
+                "Balance must be a valid integer or 0",
+                (value) => value === null || value === 0 || value > 0 // Autorise 0 ou des nombres positifs
+            ),
+        bank_account: Yup.string()
+            .matches(/^[A-Za-z]{2}\d+$/, 'invalid')  // Permet uniquement les chiffres
+            .min(6, 'bank_account must be at least 6 characters')
+            .max(20, 'bank_account must not exceed 20 characters')
+            .required('bank_account is required'),
+        address: Yup.string().required('Address is required').max(100, 'Address max 100 digits'),
+        password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
+        email: Yup.string().email('Invalid email format').required('Email is required'),
+        name: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
+        id: Yup.number().integer("must be entire").nullable().transform((value, originalValue) => (originalValue === "" ? null : value))
+
+    });
+
     return (
         <div>
             <DataTable
@@ -73,6 +96,7 @@ const ProfileTable = () => {
                 onAddNew={handleAddNew}
                 onUpdateItem={handleUpdateItem}
                 onDelete={handleDeleteProfile}
+                validationSchema={validationSchema}
             />
             <Notification notification={notification} />
         </div>

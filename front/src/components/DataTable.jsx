@@ -6,7 +6,9 @@ import { Link } from "react-router-dom";
 import FormPopup from "./FormPopup";
 import ConfirmDelete from "./ConfirmDelete.jsx";
 
-const DataTable = ({ data, columns, formFields, seeJoinedTable, onAddNew, onUpdateItem, onDelete }) => {
+
+const DataTable = ({ data, columns, formFields, seeJoinedTable, onAddNew, onUpdateItem, onDelete ,validationSchema}) => {
+
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 5;
     const [searchQuery, setSearchQuery] = useState("");
@@ -125,6 +127,7 @@ const DataTable = ({ data, columns, formFields, seeJoinedTable, onAddNew, onUpda
                 onSubmit={handleFormSubmit}
                 editMode={editMode}
                 initialData={selectedItem}
+                validationSchema={validationSchema}
             />
 
             <ConfirmDelete

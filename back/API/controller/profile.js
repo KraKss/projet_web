@@ -37,7 +37,14 @@ export const getAllProfiles = async (req, res) => {
 export const addProfile = async (req, res) => {
     try {
         const {name, email, password, address, bank_account, balance} = req.body;
-
+        console.log(req)
+        console.log(req.body)
+        console.log(name)
+        console.log(email)
+        console.log(password)
+        console.log(address)
+        console.log(bank_account)
+        console.log(balance)
         const validatedBody = profileSchema.parse({
             name, email, password, address, bank_account, balance
         })

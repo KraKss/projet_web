@@ -77,13 +77,11 @@ const ProfileTable = () => {
         bank_account: Yup.string()
             .matches(/^[A-Za-z]{2}\d+$/, 'invalid')  // Permet uniquement les chiffres
             .min(6, 'bank_account must be at least 6 characters')
-            .max(20, 'bank_account must not exceed 20 characters')
-            .required('bank_account is required'),
+            .max(20, 'bank_account must not exceed 20 characters'),
         address: Yup.string().required('Address is required').max(100, 'Address max 100 digits'),
         password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
         email: Yup.string().email('Invalid email format').required('Email is required'),
         name: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
-        id: Yup.number().integer("must be entire").nullable().transform((value, originalValue) => (originalValue === "" ? null : value))
 
     });
 

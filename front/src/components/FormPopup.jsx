@@ -13,10 +13,20 @@ const FormPopup = ({ isOpen, onClose, formFields, onSubmit, editMode, initialDat
         }
     }, [editMode, initialData]);
 
-    const handleInputChange = (e, column) => {
+    const handleInputChange = (e, field) => {
         setFormData((prevData) => ({
             ...prevData,
-            [column]: e.target.value,
+            [field]: e.target.value,
+        }));
+    };
+
+    const handleNestedInputChange = (e, parentField, childField) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [parentField]: {
+                ...prevData[parentField],
+                [childField]: e.target.value,
+            },
         }));
     };
 
@@ -28,7 +38,16 @@ const FormPopup = ({ isOpen, onClose, formFields, onSubmit, editMode, initialDat
         } catch (validationErrors) {
             const newErrors = {};
             validationErrors.inner.forEach((error) => {
-                newErrors[error.path] = error.message;
+                const path = error.path.split(".");
+                if (path.length === 1) {
+                    newErrors[path[0]] = error.message;
+                } else {
+                    const [parent, child] = path;
+                    newErrors[parent] = {
+                        ...(newErrors[parent] || {}),
+                        [child]: error.message,
+                    };
+                }
             });
             setErrors(newErrors);
             return false;
@@ -51,19 +70,49 @@ const FormPopup = ({ isOpen, onClose, formFields, onSubmit, editMode, initialDat
             <div className={styles.popupContent}>
                 <h3>{editMode ? "Edit Item" : "Add New"}</h3>
                 <form onSubmit={handleSubmit}>
-                    {formFields.map((col) => (
-                        <div key={col} className={styles.formField}>
-                            <label htmlFor={col}>{col}</label>
-                            <input
-                                type="text"
-                                id={col}
-                                value={formData[col] || ""}
-                                onChange={(e) => handleInputChange(e, col)}
-                                required
-                            />
-                            {errors[col] && <span className={styles.error}>{errors[col]}</span>}
-                        </div>
-                    ))}
+                    {formFields.map((field) => {
+                        if (typeof field === "string") {
+                            return (
+                                <div key={field} className={styles.formField}>
+                                    <label htmlFor={field}>{field}</label>
+                                    <input
+                                        type="text"
+                                        id={field}
+                                        value={formData[field] || ""}
+                                        onChange={(e) => handleInputChange(e, field)}
+                                    />
+                                    {errors[field] && <span className={styles.error}>{errors[field]}</span>}
+                                </div>
+                            );
+                        } else {
+                            const [parentField, childFields] = Object.entries(field)[0];
+                            return (
+                                <div key={parentField} className={styles.formField}>
+                                    <h4>{parentField.replace("_", " ").toUpperCase()}</h4>
+                                    {childFields.map((childField) => (
+                                        <div key={childField} className={styles.nestedFormField}>
+                                            <label htmlFor={`${parentField}-${childField}`}>
+                                                {childField}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id={`${parentField}-${childField}`}
+                                                value={formData[parentField]?.[childField] || ""}
+                                                onChange={(e) =>
+                                                    handleNestedInputChange(e, parentField, childField)
+                                                }
+                                            />
+                                            {errors[parentField]?.[childField] && (
+                                                <span className={styles.error}>
+                                                    {errors[parentField][childField]}
+                                                </span>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            );
+                        }
+                    })}
                     <div className={styles.buttons}>
                         <button type="submit">{editMode ? "Save Changes" : "Submit"}</button>
                         <button type="button" onClick={onClose}>

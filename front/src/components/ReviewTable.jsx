@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import {getAllReviews} from "../API/controller/review.js";
-import {addProfile, deleteProfileById, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
+import {addReview, deleteReviewById, getAllReviews, updateReview} from "../API/controller/review.js";
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
@@ -24,46 +23,61 @@ const ReviewTable = () => {
         loadReview();
     }, []);
 
-    const handleAddNew = async (newProfileData) => {
-        if (newProfileData.balance) newProfileData.balance = parseFloat(newProfileData.balance);
+    const handleAddNew = async (newReviewData) => {
+        const { reviewer_id, seller_id, rating, comment, reviewer_profile, seller_profile } = newReviewData;
+
+        const payload = {
+            reviewer_id,
+            seller_id,
+            rating,
+            comment,
+            ...(reviewer_profile && { reviewer_profile }),
+            ...(seller_profile && { seller_profile })
+        };
+
         try {
-            await addProfile(newProfileData);
+            await addReview(payload);
             loadReview();
-            showNotification("Profil ajouté avec succès !", "success");
+            showNotification("Review ajouté avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de l'ajout du profil", error);
-            showNotification("Une erreur est survenue lors de l'ajout ", "error");
+            console.error("Erreur lors de l'ajout du review", error);
+            showNotification("Une erreur est survenue lors de l'ajout", "error");
         }
     };
 
-    const handleUpdateItem = async (profile, updatedData) => {
+
+    const handleUpdateItem = async (review, updatedData) => {
         try {
-            if (updatedData.balance) updatedData.balance = parseFloat(updatedData.balance);
-            if (!updatedData.password || updatedData.password === profile.password) {
-                delete updatedData.password;
-            }
-            await updateProfile(updatedData);
+            await updateReview(updatedData);
             loadReview();
-            showNotification("Profil modifier avec succès !", "success");
+            showNotification("Review modifier avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de la mise à jour du profil", error);
+            console.error("Erreur lors de la mise à jour du review", error);
             showNotification("Une erreur est survenue lors de la modification ", "error");
         }
     };
 
-    const handleDeleteProfile = async (profile) => {
+    const handleDeleteReview = async (review) => {
         try {
-            await deleteProfileById(profile.id);
+            await deleteReviewById(review.reviewer_id, review.seller_id);
             loadReview();
-            showNotification("Profil supprimer avec succès !", "success");
+            showNotification("Review supprimer avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de la suppression du profil", error);
+            console.error("Erreur lors de la suppression du review", error);
             showNotification("Une erreur est survenue lors de la suppression", "error");
         }
     };
 
     const columns = ["reviewer_id", "seller_id", "rating", "comment", "review_date"];
-    const formFields = ["name", "email", "password", "address", "bank_account", "balance"];
+    const profileFields = ["name", "email", "password", "address", "bank_account", "balance"]
+    const formFields = [
+        "reviewer_id",
+        "seller_id",
+        "rating",
+        "comment",
+        { reviewer_profile: profileFields },
+        { seller_profile: profileFields }
+    ];
 
     return (
         <div>
@@ -73,7 +87,7 @@ const ReviewTable = () => {
                 formFields={formFields}
                 onAddNew={handleAddNew}
                 onUpdateItem={handleUpdateItem}
-                onDelete={handleDeleteProfile}
+                onDelete={handleDeleteReview}
             />
             <Notification notification={notification} />
         </div>

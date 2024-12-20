@@ -15,6 +15,9 @@
     padding: 20px;
     border-radius: 8px;
     width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .formField {
@@ -36,6 +39,7 @@
 .buttons {
     display: flex;
     justify-content: space-between;
+    margin-top: 10px;
 }
 
 button {
@@ -43,6 +47,7 @@ button {
     border: none;
     cursor: pointer;
     border-radius: 4px;
+    font-size: 14px;
 }
 
 button[type="submit"] {

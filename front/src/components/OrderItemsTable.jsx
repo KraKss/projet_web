@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import {getOrderItemsByOrderId} from "../API/controller/orderItems.js";
+import {
+    addOrderItem,
+    deleteOrderItemById,
+    getOrderItemsByOrderId,
+    updateOrderItem
+} from "../API/controller/orderItems.js";
 import {addProfile, deleteProfileById, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
@@ -26,14 +31,13 @@ const OrderItemsTable = () => {
         loadOrderItems();
     }, []);
 
-    const handleAddNew = async (newProfileData) => {
-        if (newProfileData.balance) newProfileData.balance = parseFloat(newProfileData.balance);
+    const handleAddNew = async (newOrderItem) => {
         try {
-            await addProfile(newProfileData);
+            await addOrderItem(newOrderItem);
             loadOrderItems();
-            showNotification("Profil ajouté avec succès !", "success");
+            showNotification("OrderItem ajouté avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de l'ajout du profil", error);
+            console.error("Erreur lors de l'ajout du order item", error);
             showNotification("Une erreur est survenue lors de l'ajout ", "error");
         }
     };
@@ -44,28 +48,28 @@ const OrderItemsTable = () => {
             if (!updatedData.password || updatedData.password === profile.password) {
                 delete updatedData.password;
             }
-            await updateProfile(updatedData);
+            await updateOrderItem(updatedData);
             loadOrderItems();
-            showNotification("Profil modifier avec succès !", "success");
+            showNotification("OrderItem modifier avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de la mise à jour du profil", error);
+            console.error("Erreur lors de la mise à jour du order item", error);
             showNotification("Une erreur est survenue lors de la modification ", "error");
         }
     };
 
-    const handleDeleteProfile = async (profile) => {
+    const handleDeleteOrderItem = async (orderItem) => {
         try {
-            await deleteProfileById(profile.id);
+            await deleteOrderItemById(orderItem.order_id, orderItem.product_id);
             loadOrderItems();
-            showNotification("Profil supprimer avec succès !", "success");
+            showNotification("OrderItem supprimer avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de la suppression du profil", error);
+            console.error("Erreur lors de la suppression du order item", error);
             showNotification("Une erreur est survenue lors de la suppression", "error");
         }
     };
 
     const columns = ["order_id", "product_id", "quantity"];
-    const formFields = ["name"];
+    const formFields = columns
 
     return (
         <div>
@@ -75,7 +79,7 @@ const OrderItemsTable = () => {
                 formFields={formFields}
                 onAddNew={handleAddNew}
                 onUpdateItem={handleUpdateItem}
-                onDelete={handleDeleteProfile}
+                onDelete={handleDeleteOrderItem}
             />
             <Notification notification={notification} />
         </div>

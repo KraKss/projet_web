@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import {addProduct, getAllProducts} from "../API/controller/product.js";
-import { deleteProfileById, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
+import {addProduct, deleteProductById, getAllProducts, updateProduct} from "../API/controller/product.js";
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
@@ -35,28 +34,24 @@ const ProductTable = () => {
         }
     };
 
-    const handleUpdateItem = async (profile, updatedData) => {
+    const handleUpdateItem = async (product, updatedData) => {
         try {
-            if (updatedData.balance) updatedData.balance = parseFloat(updatedData.balance);
-            if (!updatedData.password || updatedData.password === profile.password) {
-                delete updatedData.password;
-            }
-            await updateProfile(updatedData);
+            await updateProduct(updatedData);
             loadProduct();
-            showNotification("Profil modifier avec succès !", "success");
+            showNotification("Product modifier avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de la mise à jour du profil", error);
+            console.error("Erreur lors de la mise à jour du product", error);
             showNotification("Une erreur est survenue lors de la modification ", "error");
         }
     };
 
-    const handleDeleteProduct = async (profile) => {
+    const handleDeleteProduct = async (product) => {
         try {
-            await deleteProfileById(profile.id);
+            await deleteProductById(product.id);
             loadProduct();
-            showNotification("Profil supprimer avec succès !", "success");
+            showNotification("Product supprimer avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de la suppression du profil", error);
+            console.error("Erreur lors de la suppression du product", error);
             showNotification("Une erreur est survenue lors de la suppression", "error");
         }
     };

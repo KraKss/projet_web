@@ -22,32 +22,29 @@ const addProduct = async (product) => {
     }
 };
 
-// const updateProfile = async (updatedData) => {
-//     try {
-//         // Handle password updates
-//         if (!updatedData.password || updatedData.password === updatedData.oldPassword) {
-//             delete updatedData.password;
-//         }
-//         if (updatedData.balance) updatedData.balance = parseFloat(updatedData.balance);
-//
-//         const { data } = await apiClient.patch(`${API_ROUTES.PRODUCT_ROUTE}/`, updatedData);
-//         return data;
-//     } catch (e) {
-//         throw new Error("Une erreur est survenue, réessayer plus tard: " + e);
-//     }
-// };
-//
-// const deleteProfileById = async (id) => {
-//     try {
-//         await apiClient.delete(`${API_ROUTES.PRODUCT_ROUTE}/${id}`);
-//     } catch (e) {
-//         throw new Error("Une erreur est survenue, réessayer plus tard: " + e);
-//     }
-// };
+const updateProduct = async (updatedData) => {
+    try {
+        if (updatedData.seller_id) updatedData.seller_id = parseInt(updatedData.seller_id);
+        if (updatedData.price) updatedData.price = parseFloat(updatedData.price);
+        if (updatedData.filament_type) updatedData.filament_type = parseInt(updatedData.filament_type);
+        const { data } = await apiClient.patch(`${API_ROUTES.PRODUCT_ROUTE}/`, updatedData);
+        return data;
+    } catch (e) {
+        throw new Error("Une erreur est survenue, réessayer plus tard: " + e);
+    }
+};
+
+const deleteProductById = async (id) => {
+    try {
+        await apiClient.delete(`${API_ROUTES.PRODUCT_ROUTE}/${id}`);
+    } catch (e) {
+        throw new Error("Une erreur est survenue, réessayer plus tard: " + e);
+    }
+};
 
 export {
     getAllProducts,
     addProduct,
-    // updateProfile,
-    // deleteProfileById,
+    updateProduct,
+    deleteProductById,
 };

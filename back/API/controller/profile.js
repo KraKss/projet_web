@@ -19,6 +19,21 @@ export const getProfileById = async (req, res)=> {
     }
 };
 
+export const getAllProfiles = async (req, res) => {
+    try {
+        const profiles = await prisma.profile.findMany();
+
+        if (profiles.length > 0) {
+            res.status(200).json(profiles);
+        } else {
+            res.status(404).send("No profiles found");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occurred while fetching profiles");
+    }
+};
+
 export const addProfile = async (req, res) => {
     try {
         const {name, email, password, address, bank_account, balance} = req.body;

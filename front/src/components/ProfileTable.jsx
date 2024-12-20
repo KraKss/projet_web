@@ -3,32 +3,42 @@ import {addProfile, deleteProfileById, getAllProfiles, updateProfile} from "../A
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
+import exponentialRetry from "./ExpodentialRetry.jsx";
 import * as Yup from "yup";
 
 const ProfileTable = () => {
     const [profiles, setProfiles] = useState([]);
     const { notification, showNotification } = useNotification();
+    const [error, setError] = useState(null);
 
-    const loadProfiles = async () => {
-        try {
-            const data = await getAllProfiles();
-            console.log(data);
-            setProfiles(data);
-        } catch (error) {
-            console.error("Erreur lors du chargement des profils", error);
-            showNotification("Une erreur est survenue lors de la récupération des profils", "error");
-        }
+    const loadProfilesWithRetry = async () => {
+        return exponentialRetry(async () => {
+            const { data } = await getAllProfiles();
+            return data;
+        });
     };
 
     useEffect(() => {
-        loadProfiles();
+        const fetchProfiles = async () => {
+            try {
+                const profiles = await loadProfilesWithRetry();
+                setProfiles(profiles);
+            } catch (err) {
+                console.error("Failed to load profiles:", err.message);
+                setError("Erreur lors du chargement des profils");
+            }
+        };
+
+        fetchProfiles();
     }, []);
+
+    if (error) return <div>{error}</div>;
 
     const handleAddNew = async (newProfileData) => {
         if (newProfileData.balance) newProfileData.balance = parseFloat(newProfileData.balance);
         try {
             await addProfile(newProfileData);
-            loadProfiles();
+            await loadProfilesWithRetry();
             showNotification("Profil ajouté avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de l'ajout du profil", error);
@@ -43,7 +53,7 @@ const ProfileTable = () => {
                 delete updatedData.password;
             }
             await updateProfile(updatedData);
-            loadProfiles();
+            await loadProfilesWithRetry();
             showNotification("Profil modifier avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de la mise à jour du profil", error);
@@ -54,7 +64,7 @@ const ProfileTable = () => {
     const handleDeleteProfile = async (profile) => {
         try {
             await deleteProfileById(profile.id);
-            loadProfiles();
+            await loadProfilesWithRetry();
             showNotification("Profil supprimer avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de la suppression du profil", error);

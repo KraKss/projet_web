@@ -1,5 +1,52 @@
 import {z} from "zod";
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      ProductToAdd:
+ *          type: object
+ *          properties:
+ *              seller_id:
+ *                  type: integer
+ *                  description: ID of the seller
+ *              name:
+ *                  type: string
+ *                  description: Name of the product
+ *              description:
+ *                  type: string
+ *                  description: Description of the product
+ *              price:
+ *                  type: number
+ *                  description: Price of the product
+ *              filament_type:
+ *                  type: number
+ *                  description: Type of filament (if applicable)
+ *          required:
+ *              - seller_id
+ *              - name
+ *              - price
+ *      ProductToUpdate:
+ *          type: object
+ *          properties:
+ *              seller_id:
+ *                  type: integer
+ *                  description: ID of the seller (optional)
+ *              name:
+ *                  type: string
+ *                  description: Name of the product (optional)
+ *              description:
+ *                  type: string
+ *                  description: Description of the product (optional)
+ *              price:
+ *                  type: number
+ *                  description: Price of the product (optional)
+ *              filament_type:
+ *                  type: number
+ *                  description: Type of filament (optional)
+ */
+
+
 export const productSchema = z.object({
     // TODO trim fields
     seller_id: z.number().nonnegative(),

@@ -1,5 +1,61 @@
 import {z} from "zod";
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      ReviewToAdd:
+ *          type: object
+ *          properties:
+ *              reviewer_id:
+ *                  type: integer
+ *                  description: ID of the reviewer
+ *              seller_id:
+ *                  type: integer
+ *                  description: ID of the seller
+ *              rating:
+ *                  type: number
+ *                  minimum: 0
+ *                  maximum: 5
+ *                  description: Rating of the seller (0-5)
+ *              comment:
+ *                  type: string
+ *                  description: Optional comment
+ *              reviewer_profile:
+ *                  type: object
+ *                  description: Optional profile of the reviewer
+ *
+ *              seller_profile:
+ *                  type: object
+ *                  description: Optional profile of the seller
+ *
+ *          required:
+ *              - reviewer_id
+ *              - seller_id
+ *              - rating
+ *      ReviewToUpdate:
+ *          type: object
+ *          properties:
+ *              reviewer_id:
+ *                  type: integer
+ *                  description: ID of the reviewer
+ *              seller_id:
+ *                  type: integer
+ *                  description: ID of the seller
+ *              rating:
+ *                  type: number
+ *                  minimum: 0
+ *                  maximum: 5
+ *                  description: Updated rating (0-5)
+ *              comment:
+ *                  type: string
+ *                  description: Updated comment
+ *          required:
+ *              - reviewer_id
+ *              - seller_id
+ */
+
+
 export const profileSchema = z.object({
     // TODO trim fields
     name: z.string().min(1, "Name is required"),
@@ -9,6 +65,8 @@ export const profileSchema = z.object({
     bank_account: z.string().optional(), // add iban validation (npm i iban) or regex
     balance: z.number().nonnegative("Balance can't be negative").optional()
 })
+
+
 
 export const updateProfileSchema = z.object({
     name: z.string().min(1, "Name is required").optional(),

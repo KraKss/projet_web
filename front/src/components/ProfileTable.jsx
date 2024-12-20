@@ -12,11 +12,8 @@ const ProfileTable = () => {
     const [error, setError] = useState(null);
 
     const loadProfilesWithRetry = async () => {
-        return exponentialRetry(async () => {
-            const { data } = await getAllProfiles();
-            return data;
-        });
-    };
+        return exponentialRetry(getAllProfiles);
+    }
 
     useEffect(() => {
         const fetchProfiles = async () => {
@@ -38,7 +35,7 @@ const ProfileTable = () => {
         if (newProfileData.balance) newProfileData.balance = parseFloat(newProfileData.balance);
         try {
             await addProfile(newProfileData);
-            await loadProfilesWithRetry();
+            setProfiles((prevProfiles) => [...prevProfiles, newProfileData]);
             showNotification("Profil ajouté avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de l'ajout du profil", error);
@@ -53,7 +50,9 @@ const ProfileTable = () => {
                 delete updatedData.password;
             }
             await updateProfile(updatedData);
-            await loadProfilesWithRetry();
+            setProfiles((prevProfiles) =>
+                prevProfiles.map((p) => (p.id === profile.id ? { ...p, ...updatedData } : p))
+            );
             showNotification("Profil modifier avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de la mise à jour du profil", error);
@@ -64,7 +63,9 @@ const ProfileTable = () => {
     const handleDeleteProfile = async (profile) => {
         try {
             await deleteProfileById(profile.id);
-            await loadProfilesWithRetry();
+            setProfiles((prevProfiles) =>
+                prevProfiles.filter((p) => p.id !== profile.id)
+            );
             showNotification("Profil supprimer avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de la suppression du profil", error);

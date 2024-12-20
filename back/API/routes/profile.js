@@ -1,25 +1,117 @@
-import Router from "express-promise-router";
-import {addProfile, deleteProfileById, getAllProfiles, getProfileById, updateProfile} from "../controller/profile.js";
-import {authBasic} from "../middleware/auth/basic.js";
-import {manager} from "../middleware/auth/mustBe.js";
-import {upload} from "../middleware/multer/multer.js";
-import express from "express";
+import Router from 'express-promise-router';
+import {
+    addProfile,
+    updateProfile,
+    getProfileById,
+    getAllProfiles,
+    deleteProfileById
+} from '../controller/profile.js';
+import {authBasic} from '../middleware/auth/basic.js';
+import {manager} from '../middleware/auth/mustBe.js';
+import {profileValidatorMiddlewares as PVM} from '../middleware/validation.js';
 
 const router = Router();
 
-// router.post("/", upload.fields([
-//     {name: 'name', maxCount: 1},
-//     {name: 'email', maxCount: 1},
-//     {name: 'password', maxCount: 1},
-//     {name: 'address', maxCount: 1},
-//     {name: 'bank_account', maxCount: 1},
-//     {name: 'balance', maxCount: 1}
-// ]), addProfile);
-// router.post("/", express.json(), addProfile);
-router.post("/", addProfile);
-router.patch("/", updateProfile);
-router.get("/all", getAllProfiles);
-router.get("/:id", authBasic, manager, getProfileById);
-router.delete("/:id", deleteProfileById);
+/**
+ * @swagger
+ * /profiles:
+ *  post:
+ *      tags:
+ *          - Profile
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/ProfileToAdd'
+ *      responses:
+ *          201:
+ *              $ref: '#/components/responses/ProfileAdded'
+ *          400:
+ *              description: Validation error
+ *          500:
+ *              description: Server error
+ */
+router.post('/', PVM.profileToAdd, addProfile);
+
+/**
+ * @swagger
+ * /profiles:
+ *  patch:
+ *      tags:
+ *          - Profile
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/ProfileToUpdate'
+ *      responses:
+ *          204:
+ *              description: Profile updated
+ *          400:
+ *              description: Validation error
+ *          500:
+ *              description: Server error
+ */
+router.patch('/', PVM.profileToUpdate, updateProfile);
+
+/**
+ * @swagger
+ * /profiles/all:
+ *  get:
+ *      tags:
+ *          - Profile
+ *      responses:
+ *          200:
+ *              $ref: '#/components/responses/ProfileListResponse'
+ *          404:
+ *              description: No profiles found
+ *          500:
+ *              description: Server error
+ */
+router.get('/all', getAllProfiles);
+
+/**
+ * @swagger
+ * /profiles/{id}:
+ *  get:
+ *      tags:
+ *          - Profile
+ *      parameters:
+ *         - in: path
+ *           name: id
+ *           schema:
+ *             type: integer
+ *           required: true
+ *           description: Profile ID
+ *      responses:
+ *          200:
+ *              $ref: '#/components/responses/ProfileResponse'
+ *          404:
+ *              description: Profile not found
+ *          500:
+ *              description: Server error
+ */
+router.get('/:id', authBasic, manager, getProfileById);
+
+/**
+ * @swagger
+ * /profiles/{id}:
+ *  delete:
+ *      tags:
+ *          - Profile
+ *      parameters:
+ *         - in: path
+ *           name: id
+ *           schema:
+ *             type: integer
+ *           required: true
+ *           description: Profile ID
+ *      responses:
+ *          204:
+ *              description: Profile deleted
+ *          500:
+ *              description: Server error
+ */
+router.delete('/:id', PVM.profileToDelete, deleteProfileById);
 
 export default router;

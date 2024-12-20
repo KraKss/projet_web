@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
-    "initDB": "node scripts/JS/initDB.js"
+    "initDB": "node scripts/JS/initDB.js",
+    "genDoc": "node ./swagger/swagger_jsdoc.js"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.9",
-    "prisma": "^6.0.1"
+    "prisma": "^6.1.0",
+    "swagger-jsdoc": "^6.2.8"
   }
 }

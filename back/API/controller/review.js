@@ -1,6 +1,48 @@
 import prisma from "../../database/databseORM.js";
 import {reviewSchema, updateReviewSchema} from "../middleware/validator/review.js";
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Review:
+ *          type: object
+ *          properties:
+ *              reviewer_id:
+ *                  type: integer
+ *                  description: ID of the reviewer
+ *              seller_id:
+ *                  type: integer
+ *                  description: ID of the seller being reviewed
+ *              rating:
+ *                  type: integer
+ *                  description: Rating between 1 and 5
+ *              comment:
+ *                  type: string
+ *                  description: Review comment
+ *  responses:
+ *      ReviewResponse:
+ *          description: The review details
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Review'
+ *      ReviewListResponse:
+ *          description: List of reviews for a seller
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: array
+ *                      items:
+ *                          $ref: '#/components/schemas/Review'
+ *      ReviewAdded:
+ *          description: Review created successfully
+ *      ReviewUpdated:
+ *          description: Review updated successfully
+ *      ReviewDeleted:
+ *          description: Review deleted successfully
+ */
+
 export const getReviewBySellerId = async (req, res)=> {
     try {
         const review = await prisma.review.findMany({

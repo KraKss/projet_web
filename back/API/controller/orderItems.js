@@ -1,6 +1,48 @@
 import prisma from "../../database/databseORM.js";
 import {itemSchema, requestBodySchema} from "../middleware/validator/orderItems.js";
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Order:
+ *          type: object
+ *          properties:
+ *              order_id:
+ *                  type: integer
+ *                  description: ID of the order
+ *              buyer_id:
+ *                  type: integer
+ *                  description: ID of the buyer
+ *              payment_status:
+ *                  type: string
+ *                  description: Payment status of the order
+ *              shipping_status:
+ *                  type: string
+ *                  description: Shipping status of the order
+ *  responses:
+ *      OrderResponse:
+ *          description: The order details
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Order'
+ *      OrderListResponse:
+ *          description: List of orders
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: array
+ *                      items:
+ *                          $ref: '#/components/schemas/Order'
+ *      OrderAdded:
+ *          description: Order created successfully
+ *      OrderUpdated:
+ *          description: Order updated successfully
+ *      OrderDeleted:
+ *          description: Order deleted successfully
+ */
+
 export const getOrderItemsByOrderId = async (req, res)=> {
     try {
         const itemsList = await prisma.order_items.findMany({

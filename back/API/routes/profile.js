@@ -30,7 +30,7 @@ const router = Router();
  *          500:
  *              description: Server error
  */
-router.post('/', addProfile);
+router.post('/', manager, addProfile);
 
 /**
  * @swagger
@@ -51,7 +51,7 @@ router.post('/', addProfile);
  *          500:
  *              description: Server error
  */
-router.patch('/', updateProfile);
+router.patch('/', manager, updateProfile);
 
 /**
  * @swagger
@@ -67,7 +67,7 @@ router.patch('/', updateProfile);
  *          500:
  *              description: Server error
  */
-router.get('/all', getAllProfiles);
+router.get('/all', manager, getAllProfiles);
 
 /**
  * @swagger
@@ -90,7 +90,7 @@ router.get('/all', getAllProfiles);
  *          500:
  *              description: Server error
  */
-router.get('/:id', authBasic, manager, getProfileById);
+router.get('/:id', getProfileById);
 
 /**
  * @swagger
@@ -111,6 +111,6 @@ router.get('/:id', authBasic, manager, getProfileById);
  *          500:
  *              description: Server error
  */
-router.delete('/:id', deleteProfileById);
+router.delete('/:id', manager, deleteProfileById);
 
 export default router;

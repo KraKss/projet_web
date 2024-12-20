@@ -1,5 +1,6 @@
 import prisma from "../../database/databseORM.js";
 import {reviewSchema, updateReviewSchema} from "../middleware/validator/review.js";
+import {hash} from "../../utils/hash.js";
 
 /**
  * @swagger
@@ -87,6 +88,14 @@ export const addReview = async (req, res) => {
         const validatedBody = reviewSchema.parse({
             reviewer_id, seller_id, rating, comment, reviewer_profile, seller_profile
         });
+
+        if (reviewer_profile) {
+            reviewer_profile.password = await hash(reviewer_profile.password, 10)
+        }
+
+        if (seller_profile) {
+            seller_profile.password = await hash(seller_profile.password, 10)
+        }
 
         const dataToInsert = {
             rating: validatedBody.rating,

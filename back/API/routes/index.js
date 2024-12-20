@@ -5,14 +5,17 @@ import {default as productRouter} from "./product.js";
 import {default as reviewRouter} from "./review.js";
 import {default as orderRouter} from "./order.js";
 import {default as orderItemsRouter} from "./orderItems.js";
+import {login} from "../controller/login.js";
+import {checkJWT} from "../middleware/auth/checkJWT.js";
 
 const router = Router();
 
-router.use("/api/profile", profileRouter);
-router.use("/api/product", productRouter);
-router.use("/api/review", reviewRouter);
-router.use("/api/order", orderRouter);
-router.use("/api/order/items", orderItemsRouter);
+router.post("/api/login", login);
+router.use("/api/profile", checkJWT, profileRouter);
+router.use("/api/product", checkJWT, productRouter);
+router.use("/api/review", checkJWT, reviewRouter);
+router.use("/api/order", checkJWT, orderRouter);
+router.use("/api/order/items", checkJWT, orderItemsRouter);
 
 router.use((req, res) => {
     console.error(`Bad URL: ${req.path}`);

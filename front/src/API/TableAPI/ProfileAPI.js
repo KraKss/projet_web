@@ -18,9 +18,9 @@ const getProfileById = async (id) => {
     }
 }
 
-const createProfile = async (profile) => {
+const addProfile = async (profile) => {
     try {
-        const { data } = await apiClient.post("/profiles", profile);
+        const { data } = await apiClient.post("/profile", profile);
         return data;
     } catch (e) {
         throw new Error("Une erreur est survenue, réessayer plus tard: " + e);
@@ -48,7 +48,7 @@ const deleteProfileById = async (id) => {
 export {
     getAllProfiles,
     getProfileById,
-    createProfile,
+    addProfile,
     updateProfile,
     deleteProfileById,
 }

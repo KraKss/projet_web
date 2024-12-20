@@ -22,7 +22,6 @@ const addProfile = async (profile) => {
 
 const updateProfile = async (updatedData) => {
     try {
-        // Handle password updates
         if (!updatedData.password || updatedData.password === updatedData.oldPassword) {
             delete updatedData.password;
         }

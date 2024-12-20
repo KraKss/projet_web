@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import {getAllProducts} from "../API/controller/product.js";
-import {addProfile, deleteProfileById, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
+import {addProduct, getAllProducts} from "../API/controller/product.js";
+import { deleteProfileById, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
@@ -24,14 +24,13 @@ const ProductTable = () => {
         loadProduct();
     }, []);
 
-    const handleAddNew = async (newProfileData) => {
-        if (newProfileData.balance) newProfileData.balance = parseFloat(newProfileData.balance);
+    const handleAddNew = async (newProductData) => {
         try {
-            await addProfile(newProfileData);
+            await addProduct(newProductData);
             loadProduct();
-            showNotification("Profil ajouté avec succès !", "success");
+            showNotification("Product ajouté avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de l'ajout du profil", error);
+            console.error("Erreur lors de l'ajout du product", error);
             showNotification("Une erreur est survenue lors de l'ajout ", "error");
         }
     };
@@ -51,7 +50,7 @@ const ProductTable = () => {
         }
     };
 
-    const handleDeleteProfile = async (profile) => {
+    const handleDeleteProduct = async (profile) => {
         try {
             await deleteProfileById(profile.id);
             loadProduct();
@@ -63,7 +62,7 @@ const ProductTable = () => {
     };
 
     const columns = ["id", "seller_id", "name", "description", "price", "filament_type"];
-    const formFields = ["name"];
+    const formFields = ["seller_id", "name", "description", "price", "filament_type"];
 
     return (
         <div>
@@ -73,7 +72,7 @@ const ProductTable = () => {
                 formFields={formFields}
                 onAddNew={handleAddNew}
                 onUpdateItem={handleUpdateItem}
-                onDelete={handleDeleteProfile}
+                onDelete={handleDeleteProduct}
             />
             <Notification notification={notification} />
         </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {addProfile, deleteProfileById, getAllProfiles, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
+import {addProfile, deleteProfileById, getAllProfiles, updateProfile} from "../API/controller/profile.js";
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";

@@ -20,10 +20,14 @@ const ProfileForm = ({ dataUpdate }) => {
             .matches(/^[A-Za-z]{2}\d+$/, 'invalid')
             .min(6, 'bank_account must be at least 6 characters')
             .max(20, 'bank_account must not exceed 20 characters')
-            .required('bank_account is required'),
+            .nullable() // Permet au champ d'accepter "null" comme valeur valide
+            .transform(value => (value === "" ? null : value)) // Transforme "" en null
+            .notRequired(), // Rend le champ optionnel
+
         address: Yup.string().required('Address is required').max(100, 'Address max 100 digits'),
         password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
         email: Yup.string().email('Invalid email format').required('Email is required'),
+        image: Yup.mixed().nullable(),
         name: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
         user_id: Yup.number().integer("must be entire").nullable()
             .transform((value, originalValue) => (originalValue === "" ? null : value))
@@ -43,7 +47,7 @@ const ProfileForm = ({ dataUpdate }) => {
             readOnly: true,
             error: errors.user_id?.message,
         }] : []),
-        { name: 'image', label: 'Avatar', type: 'file', accept: "image/*",defaultValue: dataUpdate?.image || '', error: errors.name?.message },
+        { name: 'image', label: 'Avatar', type: 'file', accept: "image/*",defaultValue: dataUpdate?.image || '', error: errors.image?.message },
         { name: 'name', label: 'Name', type: 'text', defaultValue: dataUpdate?.name || '', error: errors.name?.message },
         { name: 'email', label: 'Email', type: 'email', defaultValue: dataUpdate?.email || '', error: errors.email?.message },
         { name: 'password', label: 'Password', type: 'password', defaultValue: dataUpdate?.password, error: errors.password?.message },

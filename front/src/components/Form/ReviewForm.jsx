@@ -14,8 +14,8 @@ const ReviewForm = ({ dataUpdate }) => {
     const validationSchema = Yup.object().shape({
         reviewer_id: Yup.number().integer("Must be an integer").positive("Must be positive").required('Reviewer ID is required'),
         seller_id: Yup.number().integer("Must be an integer").positive("Must be positive").required('Seller ID is required'),
-        rating: Yup.number().min(1, "Rating must be at least 1").max(5, "Rating must be at most 5").required('Rating is required'),
-        comment: Yup.string().required('Comment is required').max(500, 'Comment cannot exceed 500 characters'),
+        rating: Yup.number().min(0, "Rating must be at least 1").max(5, "Rating must be at most 5").required('Rating is required'),
+        comment: Yup.string().max(500, 'Comment cannot exceed 500 characters'),
     });
 
     const { register,watch, handleSubmit, formState: { errors } } = useForm({

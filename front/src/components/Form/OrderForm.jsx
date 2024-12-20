@@ -12,8 +12,8 @@ const OrderForm = ({ dataUpdate }) => {
     const validationSchema = Yup.object().shape({
         order_id: Yup.number().integer("Must be an integer").positive("Must be positive").nullable(),
         buyer_id: Yup.number().integer("Must be an integer").positive("Must be positive").required('Buyer ID is required'),
-        payment_status: Yup.string().required('Payment Status is required').max(50, 'Payment Status cannot exceed 50 characters'),
-        shipping_status: Yup.string().required('Shipping Status is required').max(50, 'Shipping Status cannot exceed 50 characters'),
+        payment_status: Yup.string().max(50, 'Payment Status cannot exceed 50 characters'),
+        shipping_status: Yup.string().max(50, 'Shipping Status cannot exceed 50 characters'),
     });
 
     const { register,watch, handleSubmit, formState: { errors } } = useForm({

@@ -1,5 +1,5 @@
 const API_ROUTES = {
-    API_ROUTE: "http://localhost:3001/api",
+    API_ROUTE: "http://localhost:3001/api/v1",
     LOGIN_ROUTE: `/login`,
     PROFILE_ROUTE: "/profile",
     PRODUCT_ROUTE: "/product",

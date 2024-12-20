@@ -10,12 +10,12 @@ import {checkJWT} from "../middleware/auth/checkJWT.js";
 
 const router = Router();
 
-router.post("/api/login", login);
-router.use("/api/profile", checkJWT, profileRouter);
-router.use("/api/product", checkJWT, productRouter);
-router.use("/api/review", checkJWT, reviewRouter);
-router.use("/api/order", checkJWT, orderRouter);
-router.use("/api/order/items", checkJWT, orderItemsRouter);
+router.post("/api/v1/login", login);
+router.use("/api/v1/profile", checkJWT, profileRouter);
+router.use("/api/v1/product", checkJWT, productRouter);
+router.use("/api/v1/review", checkJWT, reviewRouter);
+router.use("/api/v1/order", checkJWT, orderRouter);
+router.use("/api/v1/order/items", checkJWT, orderItemsRouter);
 
 router.use((req, res) => {
     console.error(`Bad URL: ${req.path}`);

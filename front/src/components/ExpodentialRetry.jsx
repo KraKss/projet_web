@@ -11,7 +11,6 @@ const exponentialRetry = async (operation, maxRetries = 5, baseDelay = 1000) => 
             }
 
             const delay = baseDelay * Math.pow(2, attempt);
-            console.log(`Retrying in ${delay}ms (attempt ${attempt}/${maxRetries})`);
             await new Promise((resolve) => setTimeout(resolve, delay));
         }
     }

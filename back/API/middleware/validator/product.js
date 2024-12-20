@@ -48,7 +48,6 @@ import {z} from "zod";
 
 
 export const productSchema = z.object({
-    // TODO trim fields
     seller_id: z.number().nonnegative(),
     name: z.string().min(1, "Name is required"),
     description: z.string().min(1, "description must be at least 1 char").optional(),

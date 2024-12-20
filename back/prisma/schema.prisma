@@ -18,24 +18,24 @@ model order_items {
   order_id   Int
   product_id Int
   quantity   Int
-  orders     orders  @relation(fields: [order_id], references: [order_id], onDelete: NoAction, onUpdate: NoAction)
-  product    product @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction)
+  orders     orders  @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product    product @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([order_id, product_id])
 }
 
 model orders {
-  order_id        Int           @id @default(autoincrement())
+  id              Int              @id @default(autoincrement())
   buyer_id        Int
-  payment_status  String?       @default("pending") @db.VarChar(255)
-  shipping_status String?       @default("not_shipped") @db.VarChar(255)
-  order_date      DateTime?     @default(now()) @db.Timestamp(6)
+  payment_status  payment_status?  @default(pending)
+  shipping_status shipping_status? @default(not_shipped)
+  order_date      DateTime?        @default(now()) @db.Timestamp(6)
   order_items     order_items[]
-  profile         profile       @relation(fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  profile         profile          @relation(fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model product {
-  product_id    Int           @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   seller_id     Int
   name          String        @db.VarChar(255)
   description   String?
@@ -62,11 +62,23 @@ model profile {
 model review {
   reviewer_id                         Int
   seller_id                           Int
-  rating                              Int?
+  rating                              Int       @default(0)
   comment                             String?
   review_date                         DateTime? @default(now()) @db.Timestamp(6)
   profile_review_reviewer_idToprofile profile   @relation("review_reviewer_idToprofile", fields: [reviewer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   profile_review_seller_idToprofile   profile   @relation("review_seller_idToprofile", fields: [seller_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([reviewer_id, seller_id])
+}
+
+enum payment_status {
+  pending
+  completed
+  failed
+}
+
+enum shipping_status {
+  not_shipped
+  shipped
+  delivered
 }

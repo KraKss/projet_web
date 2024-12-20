@@ -12,7 +12,7 @@ const ProductTable = () => {
     const loadProduct = async () => {
         try {
             const data = await getAllProducts();
-            console.log(data);
+
             setProducts(data);
         } catch (error) {
             console.error("Erreur lors du chargement des review", error);

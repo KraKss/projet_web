@@ -20,7 +20,7 @@ const OrderItemsTable = () => {
     const loadOrderItems = async () => {
         try {
             const data = await getOrderItemsByOrderId(parseInt(id));
-            console.log(data);
+
             setOrderItems(data);
         } catch (error) {
             console.error("Erreur lors du chargement des orderItems", error);

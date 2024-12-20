@@ -58,7 +58,6 @@ import {profileSchema} from "./profile.js";
 
 
 export const reviewSchema = z.object({
-    // TODO trim fields
     reviewer_id: z.number().nonnegative(),
     seller_id: z.number().nonnegative(),
     rating: z.number()

@@ -84,14 +84,12 @@ export const addOrderItems = async (req, res) => {
         const { items } = req.body;
 
         const validatedBody = requestBodySchema.parse({ items });
-        console.log(validatedBody.items);
 
         const orderItems = await prisma.order_items.createMany({
             data: validatedBody.items,
             skipDuplicates: true,
         });
 
-        console.log(`order items created`);
         res.status(201).send(orderItems);
     } catch (e) {
         console.error(e.message);
@@ -123,7 +121,6 @@ export const updateOrderItem = async (req, res) => {
             }
         })
 
-        console.log("Order items updated");
         res.status(200).send(updatedItem);
     } catch (e) {
         console.error(e.message);
@@ -145,7 +142,6 @@ export const deleteOrderItemById = async (req, res) => {
             }
         })
 
-        console.log(`order item deleted`)
         res.sendStatus(204);
     } catch (e) {
         console.error("Error: " + e);

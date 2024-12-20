@@ -88,7 +88,6 @@ export const addOrder = async (req, res) => {
             buyer_id, payment_status, shipping_status
         })
 
-        // remove buyerId to join profile table (if profile doesn't exist => error)
         const validatedData = {
             payment_status: validatedBody.payment_status,
             shipping_status: validatedBody.shipping_status
@@ -109,7 +108,6 @@ export const addOrder = async (req, res) => {
         })
 
 
-        console.log(`order created`)
         res.status(201).send(order);
     } catch (e) {
         const errorMessage = e.code === "P2025" ? `Profile with ID ${req.body.buyer_id} doesn't exist` : e.message
@@ -167,7 +165,6 @@ export const updateOrder = async (req, res) => {
                 }
             })
 
-        console.log(`order updated`)
         res.status(201).send(order);
     } catch (e) {
         console.error(e.message);
@@ -186,10 +183,9 @@ export const deleteOrderById = async (req, res) => {
             }
         })
 
-        console.log(`order ${req.params.id} deleted`)
         res.sendStatus(204);
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.sendStatus(500);
     }
 }

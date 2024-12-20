@@ -100,7 +100,7 @@ export const addProduct = async (req, res) => {
                 id: true
             }
         })
-        console.log("product created")
+
         res.status(201).send({id})
     } catch (e) {
         console.error(e);
@@ -132,11 +132,11 @@ export const updateProduct = async (req, res) => {
                 id: id
             }
         })
-        console.log("product updated")
+
         res.sendStatus(204);
 
     } catch (e) {
-        console.log(e)
+        console.error(e)
         res.sendStatus(500);
     }
 }
@@ -148,10 +148,10 @@ export const deleteProductById = async (req, res) => {
                 id: parseInt(req.params.id)
             }
         })
-        console.log(`product ${req.params.id} deleted`)
+
         res.sendStatus(204);
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.sendStatus(500);
     }
 }

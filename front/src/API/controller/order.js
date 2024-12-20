@@ -24,10 +24,7 @@ const updateOrder = async (updatedData) => {
     try {
         if (updatedData.order_id) updatedData.order_id = parseFloat(updatedData.order_id);
         if (updatedData.buyer_id) updatedData.buyer_id = parseFloat(updatedData.buyer_id);
-        console.log(updatedData.order_id);
-        console.log(updatedData.buyer_id);
-        console.log(updatedData.payment_status);
-        console.log(updatedData.shipping_status);
+
         const { data } = await apiClient.patch(`${API_ROUTES.ORDER_ROUTE}/`, updatedData);
         return data;
     } catch (e) {

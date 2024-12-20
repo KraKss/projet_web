@@ -129,7 +129,6 @@ export const addReview = async (req, res) => {
             }
         });
 
-        console.log("review added");
         res.status(201).send(review);
     } catch (e) {
         console.error("Error: " + e);
@@ -166,7 +165,6 @@ export const updateReview = async (req, res) => {
             }
         })
 
-        console.log("review updated")
         res.sendStatus(204);
     } catch (e) {
         console.error("Error: " + e);
@@ -188,7 +186,6 @@ export const deleteReviewById = async (req, res) => {
             }
         })
 
-        console.log(`review deleted`)
         res.sendStatus(204);
     } catch (e) {
         console.error("Error: " + e);

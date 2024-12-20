@@ -13,7 +13,7 @@ const OrderTable = () => {
     const loadOrders = async () => {
         try {
             const data = await getAllOrders();
-            console.log(data);
+
             setOrders(data);
         } catch (error) {
             console.error("Erreur lors du chargement des orders", error);

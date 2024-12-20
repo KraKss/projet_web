@@ -12,7 +12,7 @@ const ReviewTable = () => {
     const loadReview = async () => {
         try {
             const data = await getAllReviews();
-            console.log(data);
+
             setReviews(data);
         } catch (error) {
             console.error("Erreur lors du chargement des review", error);

@@ -119,7 +119,7 @@ export const addProfile = async (req, res) => {
                 id: true
             }
         })
-        console.log("profile created")
+
         res.status(201).send({id})
     } catch (e) {
         console.error(e);
@@ -152,10 +152,10 @@ export const updateProfile = async (req, res) => {
                 id: id
             }
         })
-        console.log("profile updated")
+
         res.sendStatus(204);
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.sendStatus(500);
     }
 }
@@ -167,10 +167,10 @@ export const deleteProfileById = async (req, res) => {
                 id: parseInt(req.params.id)
             }
         })
-        console.log(`profile ${req.params.id} deleted`)
+
         res.sendStatus(204);
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.sendStatus(500);
     }
 }

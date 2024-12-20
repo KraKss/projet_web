@@ -3,18 +3,9 @@ import Popup from "../Popup.jsx";
 import InputFields from "../InputFields.jsx";
 
 const Form = ({ fields = [], onSubmit, register, handleSubmit }) => {
-    const [isVisible, setIsVisible] = useState(true); // Contrôle du popup
-
-
-
-
-    const handleCancel = () => {
-        setIsVisible(false);
-    };
 
     return (
         <div>
-
                 <div style={{ padding: "10px" }}>
                     <h2 style={{ textAlign: "center", color: "#333" }}>{fields[0].defaultValue ? "UPDATE":'ADD'}</h2>
                     <form onSubmit={handleSubmit(onSubmit)}>

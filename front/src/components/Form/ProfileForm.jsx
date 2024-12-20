@@ -5,9 +5,9 @@ import Form from './Form.jsx';
 import { useForm } from 'react-hook-form';
 import {usePopup} from "../../provider/PopUpProvider.jsx";
 
-const ProfileForm = ({ dataUpdate }) => {
+const ProfileForm = ({ dataUpdate,addProfiles }) => {
 
-    const idExist = dataUpdate?.user_id !== undefined;
+    const idExist = dataUpdate?.id !== undefined;
 
     const {hidePopup } = usePopup();
 
@@ -43,7 +43,7 @@ const ProfileForm = ({ dataUpdate }) => {
             name: 'user_id',
             label: 'User ID',
             type: 'number',
-            defaultValue: dataUpdate?.user_id || '',
+            defaultValue: dataUpdate?.id || '',
             readOnly: true,
             error: errors.user_id?.message,
         }] : []),
@@ -57,35 +57,17 @@ const ProfileForm = ({ dataUpdate }) => {
     ];
 
     const onSubmit = (data) => {
-        console.log("watch ici ",watch())
-        /*
-        for (const [key, value] of Object.entries(watch())) {
-            console.log(key, value);
-        }
-         */
-
-        if (dataUpdate) {
-            console.log("", { ...dataUpdate, ...data });
-        } else {
-            console.log("data", data);
-        }
-
         const formData = new FormData();
-
         for (const [key, value] of Object.entries(data)) {
             if (value instanceof FileList) {
-                // Si la valeur est un FileList, ajoutez chaque fichier individuellement
                 Array.from(value).forEach((file) => formData.append(key, file));
             } else {
-                // Sinon, ajoutez simplement la valeur
                 formData.append(key, value);
             }
         }
-
         console.log(formData);
-
+        addProfiles(formData);
         hidePopup();
-
     };
 
     const onCancel = () => {

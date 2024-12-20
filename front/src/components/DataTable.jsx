@@ -20,8 +20,6 @@ const DataTable = ({ data, columns, seeJoinedTable, form}) => {
             </div>
         );
     };
-
-    const [isAdding, setIsAdding] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 5;
     const [searchQuery, setSearchQuery] = useState("");
@@ -42,14 +40,12 @@ const DataTable = ({ data, columns, seeJoinedTable, form}) => {
         setSearchQuery(query);
         setCurrentPage(1);
     };
-    const handleFormSubmit = (newData) => {
-        setIsAdding(false);
-    };
+
 
     return (
         <div className={styles.container}>
 
-                <button className={styles.addButton} onClick={() => {handlePopupForm()}}>
+                <button className={styles.addButton} onClick={() => {handlePopupForm(data)}}>
                     ➕ Add New
                 </button>
 

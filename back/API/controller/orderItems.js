@@ -18,6 +18,25 @@ export const getOrderItemsByOrderId = async (req, res)=> {
     }
 };
 
+export const getAllOrderItems = async (req, res) => {
+    try {
+        const orderItems = await prisma.order_items.findMany({
+            orderBy:{
+                order_id_product_id: "asc"
+            }
+        });
+
+        if (orderItems.length > 0) {
+            res.status(200).json(orderItems);
+        } else {
+            res.status(404).send("No orderItems found");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occurred while fetching orderItems");
+    }
+};
+
 export const addOrderItems = async (req, res) => {
     try {
         const { items } = req.body;

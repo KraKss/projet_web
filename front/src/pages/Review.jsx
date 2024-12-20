@@ -5,7 +5,7 @@ const Review = () => {
     return (
         <div>
             <NavBar/>
-            {/*<ReviewTable/>*/}
+            <ReviewTable/>
         </div>
     );
 };

@@ -4,6 +4,7 @@ import {getAllOrders} from "../API/controller/order.js";
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
+import {ROUTES} from "../routes/routesPath.js";
 
 const OrderTable = () => {
     const [orders, setOrders] = useState([]);
@@ -74,6 +75,7 @@ const OrderTable = () => {
                 onAddNew={handleAddNew}
                 onUpdateItem={handleUpdateItem}
                 onDelete={handleDeleteOrder}
+                seeJoinedTable={{url: `${ROUTES.ORDERS_ITEMS_ROUTE}`}}
             />
             <Notification notification={notification} />
         </div>

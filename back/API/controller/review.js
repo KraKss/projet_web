@@ -19,6 +19,25 @@ export const getReviewBySellerId = async (req, res)=> {
     }
 };
 
+export const getAllReviews = async (req, res) => {
+    try {
+        const reviews = await prisma.review.findMany({
+            orderBy:{
+                review_date: "asc"
+            }
+        });
+
+        if (reviews.length > 0) {
+            res.status(200).json(reviews);
+        } else {
+            res.status(404).send("No reviews found");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occurred while fetching reviews");
+    }
+};
+
 export const addReview = async (req, res) => {
     try {
         const { reviewer_id, seller_id, rating, comment, reviewer_profile, seller_profile } = req.body;

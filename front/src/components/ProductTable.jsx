@@ -1,33 +1,81 @@
-import { useState } from 'react';
-import DataTable from './DataTable';
+import { useState, useEffect } from "react";
+import {getAllProducts} from "../API/controller/product.js";
+import {addProfile, deleteProfileById, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
+import DataTable from "./DataTable";
+import useNotification from '../hook/useNotification.js';
+import Notification from "./Notification";
 
 const ProductTable = () => {
-    const [products, setProducts] = useState([
-        { product_id: 1, seller_id: 2, name: '3D Printer', description: 'High-quality 3D printer', price: 500, filament_type: 'PLA' },
-        { product_id: 2, seller_id: 3, name: '3D Filament', description: 'Red PLA filament', price: 30, filament_type: 'PLA' },
-        { product_id: 3, seller_id: 4, name: 'Resin Printer', description: 'Precision resin printer', price: 700, filament_type: 'Resin' },
-        { product_id: 4, seller_id: 5, name: 'Resin', description: 'High-quality resin for printing', price: 50, filament_type: 'Resin' },
-        { product_id: 5, seller_id: 6, name: '3D Scanner', description: 'Portable 3D scanner', price: 1200, filament_type: null },
-        { product_id: 6, seller_id: 7, name: '3D Pen', description: '3D pen for drawing', price: 50, filament_type: 'PLA' },
-        { product_id: 7, seller_id: 1, name: '3D test', description: 'test', price: 150, filament_type: null },
-    ]);
+    const [products, setProducts] = useState([]);
+    const { notification, showNotification } = useNotification();
 
-    const columns = ['product_id', 'seller_id', 'name', 'description', 'price', 'filament_type'];
-
-    const addProduct = (newProduct) => {
-        setProducts((prevProducts) => [
-            ...prevProducts,
-            { ...newProduct, product_id: prevProducts.length + 1 },
-        ]);
+    const loadProduct = async () => {
+        try {
+            const data = await getAllProducts();
+            console.log(data);
+            setProducts(data);
+        } catch (error) {
+            console.error("Erreur lors du chargement des review", error);
+            showNotification("Une erreur est survenue lors de la récupération des review", "error");
+        }
     };
+
+    useEffect(() => {
+        loadProduct();
+    }, []);
+
+    const handleAddNew = async (newProfileData) => {
+        if (newProfileData.balance) newProfileData.balance = parseFloat(newProfileData.balance);
+        try {
+            await addProfile(newProfileData);
+            loadProduct();
+            showNotification("Profil ajouté avec succès !", "success");
+        } catch (error) {
+            console.error("Erreur lors de l'ajout du profil", error);
+            showNotification("Une erreur est survenue lors de l'ajout ", "error");
+        }
+    };
+
+    const handleUpdateItem = async (profile, updatedData) => {
+        try {
+            if (updatedData.balance) updatedData.balance = parseFloat(updatedData.balance);
+            if (!updatedData.password || updatedData.password === profile.password) {
+                delete updatedData.password;
+            }
+            await updateProfile(updatedData);
+            loadProduct();
+            showNotification("Profil modifier avec succès !", "success");
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour du profil", error);
+            showNotification("Une erreur est survenue lors de la modification ", "error");
+        }
+    };
+
+    const handleDeleteProfile = async (profile) => {
+        try {
+            await deleteProfileById(profile.id);
+            loadProduct();
+            showNotification("Profil supprimer avec succès !", "success");
+        } catch (error) {
+            console.error("Erreur lors de la suppression du profil", error);
+            showNotification("Une erreur est survenue lors de la suppression", "error");
+        }
+    };
+
+    const columns = ["id", "seller_id", "name", "description", "price", "filament_type"];
+    const formFields = ["name"];
 
     return (
         <div>
             <DataTable
                 data={products}
                 columns={columns}
-
+                formFields={formFields}
+                onAddNew={handleAddNew}
+                onUpdateItem={handleUpdateItem}
+                onDelete={handleDeleteProfile}
             />
+            <Notification notification={notification} />
         </div>
     );
 };

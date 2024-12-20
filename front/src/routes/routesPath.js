@@ -1,7 +1,7 @@
 const HOME_ROUTE = "/"
 const PROFILE_ROUTE = "/profile"
 const ORDERS_ROUTE = "/orders"
-const ORDERS_ITEMS_ROUTE = "/orders/items/:id"
+const ORDERS_ITEMS_ROUTE = "/order/items"
 const REVIEW_ROUTE = "/review"
 const PRODUCTS_ROUTE = "/products"
 

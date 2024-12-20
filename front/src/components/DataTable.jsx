@@ -3,7 +3,6 @@ import styles from "../styles/DataTable.module.css";
 import Pagination from "./Pagination.jsx";
 import SearchBar from "./SearchBar.jsx";
 import { Link } from "react-router-dom";
-import { ROUTES } from "../routes/routesPath.js";
 import FormPopup from "./FormPopup";
 import ConfirmDelete from "./ConfirmDelete.jsx";
 
@@ -94,9 +93,11 @@ const DataTable = ({ data, columns, formFields, seeJoinedTable, onAddNew, onUpda
                             <td>
                                 <button className={styles.editButton} onClick={() => handleEditItem(row)}>✏️</button>
                                 <button className={styles.deleteButton} onClick={() => handleDelete(row)}>🗑️</button>
-                                <Link to={ROUTES.ORDERS_ITEMS_ROUTE}>
-                                    {seeJoinedTable && <button className={styles.joinButton}>👀</button>}
-                                </Link>
+                                {seeJoinedTable &&
+                                    <Link to={`${seeJoinedTable.url}/${row.id}`}>
+                                        <button className={styles.joinButton}>👀</button>
+                                    </Link>
+                                }
                             </td>
                         </tr>
                     ))

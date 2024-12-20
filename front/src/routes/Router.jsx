@@ -17,7 +17,7 @@ const router = createBrowserRouter([
         element: <Orders/>
     },
     {
-        path: ROUTES.ORDERS_ITEMS_ROUTE,
+        path: `${ROUTES.ORDERS_ITEMS_ROUTE}/:id`,
         element: <OrdersItems/>
     },
     {

@@ -18,6 +18,25 @@ export const getProductById = async (req, res)=> {
     }
 };
 
+export const getAllProducts = async (req, res) => {
+    try {
+        const products = await prisma.product.findMany({
+            orderBy:{
+                id: "asc"
+            }
+        });
+
+        if (products.length > 0) {
+            res.status(200).json(products);
+        } else {
+            res.status(404).send("No products found");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occurred while fetching products");
+    }
+};
+
 export const addProduct = async (req, res) => {
     try {
         const {seller_id, name, description, price, filament_type} = req.body;

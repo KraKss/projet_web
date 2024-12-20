@@ -3,6 +3,7 @@ import {addReview, deleteReviewById, getAllReviews, updateReview} from "../API/c
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
+import * as Yup from "yup";
 
 const ReviewTable = () => {
     const [reviews, setReviews] = useState([]);
@@ -79,6 +80,19 @@ const ReviewTable = () => {
         { seller_profile: profileFields }
     ];
 
+    const validationSchema = Yup.object().shape({
+        review_date: Yup.date().required("La date est obligatoire"),
+        comment: Yup.string().required("need it").max(1024,"maximum 1024 carateres"),
+        rating: Yup.number()
+            .required("Rating est obligatoire")
+            .max(5, "La note ne peut pas dépasser 5")
+            .min(1, "La note doit être au moins 1"),
+        seller_id: Yup.number().integer("must be entire").required("need it"),
+        reviewer_id: Yup.number().integer("must be entire").required("need it"),
+
+
+    });
+
     return (
         <div>
             <DataTable
@@ -88,6 +102,7 @@ const ReviewTable = () => {
                 onAddNew={handleAddNew}
                 onUpdateItem={handleUpdateItem}
                 onDelete={handleDeleteReview}
+                validationSchema={validationSchema}
             />
             <Notification notification={notification} />
         </div>

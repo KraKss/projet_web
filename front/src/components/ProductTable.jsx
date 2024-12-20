@@ -3,6 +3,7 @@ import {addProduct, deleteProductById, getAllProducts, updateProduct} from "../A
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
+import * as Yup from "yup";
 
 const ProductTable = () => {
     const [products, setProducts] = useState([]);
@@ -59,6 +60,14 @@ const ProductTable = () => {
     const columns = ["id", "seller_id", "name", "description", "price", "filament_type"];
     const formFields = ["seller_id", "name", "description", "price", "filament_type"];
 
+    const validationSchema = Yup.object().shape({
+        filament_type: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
+        price: Yup.number().positive().required('Balance is required'),
+        description: Yup.string().nullable().max(1024, 'Maximum 1024 characters '),
+        name: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
+        seller_id: Yup.number().required("need it").positive("must be positive").integer("must be entire")
+    });
+
     return (
         <div>
             <DataTable
@@ -68,6 +77,7 @@ const ProductTable = () => {
                 onAddNew={handleAddNew}
                 onUpdateItem={handleUpdateItem}
                 onDelete={handleDeleteProduct}
+                validationSchema={validationSchema}
             />
             <Notification notification={notification} />
         </div>

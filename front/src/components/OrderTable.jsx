@@ -4,6 +4,7 @@ import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
 import {ROUTES} from "../routes/routesPath.js";
+import * as Yup from "yup";
 
 const OrderTable = () => {
     const [orders, setOrders] = useState([]);
@@ -64,6 +65,13 @@ const OrderTable = () => {
     const columns = ["id", "buyer_id", "payment_status", "shipping_status", "order_date"];
     const formFields = ["buyer_id", "payment_status", "shipping_status"];
 
+    const validationSchema = Yup.object().shape({
+        shipping_status: Yup.string(),
+        payment_status: Yup.string(),
+        buyer_id: Yup.number().positive("must be positive").integer("must be entire").required("need it").transform((value, originalValue) => (originalValue === "" ? null : value)),
+
+    });
+
     return (
         <div>
             <DataTable
@@ -74,6 +82,7 @@ const OrderTable = () => {
                 onUpdateItem={handleUpdateItem}
                 onDelete={handleDeleteOrder}
                 seeJoinedTable={{url: `${ROUTES.ORDERS_ITEMS_ROUTE}`}}
+                validationSchema={validationSchema}
             />
             <Notification notification={notification} />
         </div>

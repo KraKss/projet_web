@@ -5,11 +5,12 @@ import {
     getOrderItemsByOrderId,
     updateOrderItem
 } from "../API/controller/orderItems.js";
-import {addProfile, deleteProfileById, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
+import {addProfile, deleteProfileById, updateProfile} from "../API/controller/profile.js";
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
 import {useParams} from "react-router-dom";
+import * as Yup from "yup";
 
 const OrderItemsTable = () => {
     const [orderItems, setOrderItems] = useState([]);
@@ -69,7 +70,13 @@ const OrderItemsTable = () => {
     };
 
     const columns = ["order_id", "product_id", "quantity"];
-    const formFields = columns
+    const formFields = columns;
+
+    const validationSchema = Yup.object().shape({
+        quantity: Yup.number().integer("must be entire").required("need it"),
+        product_id: Yup.number().integer("must be entire").required("need it"),
+
+    });
 
     return (
         <div>
@@ -80,6 +87,7 @@ const OrderItemsTable = () => {
                 onAddNew={handleAddNew}
                 onUpdateItem={handleUpdateItem}
                 onDelete={handleDeleteOrderItem}
+                validationSchema={validationSchema}
             />
             <Notification notification={notification} />
         </div>

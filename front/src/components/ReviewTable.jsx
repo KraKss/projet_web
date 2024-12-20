@@ -81,16 +81,13 @@ const ReviewTable = () => {
     ];
 
     const validationSchema = Yup.object().shape({
-        review_date: Yup.date().required("La date est obligatoire"),
-        comment: Yup.string().required("need it").max(1024,"maximum 1024 carateres"),
+        comment: Yup.string().max(128,"maximum 128 carateres"),
         rating: Yup.number()
             .required("Rating est obligatoire")
             .max(5, "La note ne peut pas dépasser 5")
-            .min(1, "La note doit être au moins 1"),
-        seller_id: Yup.number().integer("must be entire").required("need it"),
-        reviewer_id: Yup.number().integer("must be entire").required("need it"),
-
-
+            .min(0, "La note ne peut pas être negative"),
+        seller_id: Yup.number().integer("must be entire").required("Seller id needed"),
+        reviewer_id: Yup.number().integer("must be entire").required("Reviewer id needed"),
     });
 
     return (

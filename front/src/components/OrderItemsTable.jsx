@@ -75,7 +75,7 @@ const OrderItemsTable = () => {
     const validationSchema = Yup.object().shape({
         quantity: Yup.number().integer("must be entire").required("need it"),
         product_id: Yup.number().integer("must be entire").required("need it"),
-
+        order_id: Yup.number().integer("must be entire").required("need it"),
     });
 
     return (

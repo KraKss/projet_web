@@ -61,11 +61,11 @@ const ProductTable = () => {
     const formFields = ["seller_id", "name", "description", "price", "filament_type"];
 
     const validationSchema = Yup.object().shape({
-        filament_type: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
-        price: Yup.number().positive().required('Balance is required'),
+        filament_type: Yup.number(),
+        price: Yup.number().positive().required('Price is required'),
         description: Yup.string().nullable().max(1024, 'Maximum 1024 characters '),
         name: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
-        seller_id: Yup.number().required("need it").positive("must be positive").integer("must be entire")
+        seller_id: Yup.number().required("There must be a seller").positive("must be positive").integer("must be entire")
     });
 
     return (

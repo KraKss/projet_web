@@ -83,14 +83,14 @@ const ProfileTable = () => {
             .test(
                 "is-valid-id",
                 "Balance must be a valid integer or 0",
-                (value) => value === null || value === 0 || value > 0 // Autorise 0 ou des nombres positifs
+                (value) => value === null || value === 0 || value > 0
             ),
-        bank_account: Yup.string()
-            .matches(/^[A-Za-z]{2}\d+$/, 'invalid')  // Permet uniquement les chiffres
+        bank_account: Yup.string().nullable()
+            .matches(/^[A-Za-z]{2}\d+$/, 'invalid')
             .min(6, 'bank_account must be at least 6 characters')
             .max(20, 'bank_account must not exceed 20 characters'),
-        address: Yup.string().required('Address is required').max(100, 'Address max 100 digits'),
-        password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
+        address: Yup.string().max(100, 'Address max 100 digits'),
+        password: Yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
         email: Yup.string().email('Invalid email format').required('Email is required'),
         name: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
 

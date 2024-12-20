@@ -68,8 +68,7 @@ const OrderTable = () => {
     const validationSchema = Yup.object().shape({
         shipping_status: Yup.string(),
         payment_status: Yup.string(),
-        buyer_id: Yup.number().positive("must be positive").integer("must be entire").required("need it").transform((value, originalValue) => (originalValue === "" ? null : value)),
-
+        buyer_id: Yup.number().positive("must be positive").integer("must be entire").required("Buyer id needed").transform((value, originalValue) => (originalValue === "" ? null : value)),
     });
 
     return (

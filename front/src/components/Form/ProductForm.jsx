@@ -13,7 +13,7 @@ const ProductForm = ({ dataUpdate}) => {
         seller_id: Yup.number().required("Seller ID is required").positive("Must be positive").integer("Must be entire"),
         name: Yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
         description: Yup.string().nullable().max(1024, 'Maximum 1024 characters'),
-        filament_type: Yup.string().required('Filament type is required').min(3, 'Minimum 3 characters'),
+        filament_type: Yup.string().min(3, 'Minimum 3 characters'),
         price: Yup.number().positive("Price must be positive").required('Price is required'),
     });
 

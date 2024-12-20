@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import DataTable from './DataTable';
-import OrderForm from './Form/OrderForm.jsx';
 
 const OrderTable = () => {
     const [orders, setOrders] = useState([
@@ -19,16 +18,11 @@ const OrderTable = () => {
 
     return (
         <div>
-            <DataTable
-                data={orders}
-                columns={columns}
-                seeJoinedTable ={true}
-                form={( dataUpdate = null) => {
-                    console.log(dataUpdate);
-                    return <OrderForm onSubmit={addOrder} dataUpdate={dataUpdate}/>}
-                }
-
-            />
+            {/*<DataTable*/}
+            {/*    data={orders}*/}
+            {/*    columns={columns}*/}
+            {/*    seeJoinedTable ={true}*/}
+            {/*/>*/}
         </div>
     );
 };

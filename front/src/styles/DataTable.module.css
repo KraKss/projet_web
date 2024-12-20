@@ -33,13 +33,18 @@
     padding: 10px;
     border: 1px solid #ddd;
     text-align: left;
+    max-width: 200px;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
-.editButton, .deleteButton {
+.editButton, .deleteButton, .joinButton {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .searchInput {

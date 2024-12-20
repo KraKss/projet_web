@@ -48,7 +48,7 @@ const styles = {
     error: {
         marginTop: "5px",
         fontSize: "12px",
-        color: "#dc3545", // Rouge pour les erreurs
+        color: "#dc3545",
     },
 };
 

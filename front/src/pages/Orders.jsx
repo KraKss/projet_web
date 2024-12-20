@@ -5,7 +5,7 @@ const Orders = () => {
     return (
         <div>
             <NavBar/>
-            <OrderTable/>
+            {/*<OrderTable/>*/}
         </div>
     );
 };

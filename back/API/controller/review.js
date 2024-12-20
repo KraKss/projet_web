@@ -35,7 +35,7 @@ export const addReview = async (req, res) => {
         const review = await prisma.review.create({
             data: {
                 ...dataToInsert,
-                profile_review_reviewer_idToprofile: reviewer_profile // demdande au prof si conditionnel ou obliger connectOrCreate
+                profile_review_reviewer_idToprofile: reviewer_profile
                     ? {
                         connectOrCreate: {
                             where: { id: reviewer_id },

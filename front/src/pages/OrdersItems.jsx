@@ -6,7 +6,7 @@ const OrdersItems = () => {
     return (
         <div>
             <NavBar/>
-            <OrderItemsTable/>
+            {/*<OrderItemsTable/>*/}
         </div>
     );
 };

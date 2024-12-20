@@ -1,53 +1,68 @@
-import DataTable from './DataTable';
-import {useEffect, useState} from "react";
-import {getAllProfiles,addProfile} from "../API/TableAPI/ProfileAPI.js";
-import ProfileForm from "./Form/ProfileForm.jsx";
+import { useState, useEffect } from "react";
+import {addProfile, deleteProfileById, getAllProfiles, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
+import DataTable from "./DataTable";
 
 const ProfileTable = () => {
     const [profiles, setProfiles] = useState([]);
 
-    const loadProfileByID = async()  => {
+    const loadProfiles = async () => {
         try {
             const data = await getAllProfiles();
-            return data;
-        } catch (e) {
-            throw new Error('Un problème est survenu, réessayer plus tard: ' + e);
-        }
-    }
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await loadProfileByID();
-                setProfiles(data);
-            } catch (e) {
-                console.error(e);
-            }
-        };
-        fetchData();
-    }, []);
-
-    const columns = ['image','name', 'email', 'id', 'address', 'bank_account', 'balance'];
-
-    const addProfiles = async (newProfile) => {
-        try {
-            const addProfile1 = await addProfile(newProfile);
-            setProfiles((prevProfiles) => [...prevProfiles, addProfile1]);
-        } catch (e) {
-            console.error("Erreur lors de l'ajout du profil :", e);
+            console.log(data);
+            setProfiles(data);
+        } catch (error) {
+            console.error("Erreur lors du chargement des profils", error);
         }
     };
-    
+
+    useEffect(() => {
+        loadProfiles();
+    }, []);
+
+    const handleAddNew = async (newProfileData) => {
+        if (newProfileData.balance) newProfileData.balance = parseFloat(newProfileData.balance);
+        try {
+            await addProfile(newProfileData);
+            loadProfiles();
+        } catch (error) {
+            console.error("Erreur lors de l'ajout du profil", error);
+        }
+    };
+
+    const handleUpdateItem = async (profile, updatedData) => {
+        try {
+            if (updatedData.balance) updatedData.balance = parseFloat(updatedData.balance);
+            if (!updatedData.password || updatedData.password === profile.password) {
+                delete updatedData.password;
+            }
+            await updateProfile(updatedData);
+            loadProfiles();
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour du profil", error);
+        }
+    };
+
+    const handleDeleteProfile = async (profile) => {
+        try {
+            await deleteProfileById(profile.id);
+            loadProfiles();
+        } catch (error) {
+            console.error("Erreur lors de la suppression du profil", error);
+        }
+    };
+
+    const columns = ["id", "name", "email", "address", "bank_account", "balance"];
+    const formFields = ["name", "email", "password", "address", "bank_account", "balance"];
 
     return (
         <div>
             <DataTable
                 data={profiles}
                 columns={columns}
-                form={( dataUpdate = null) => {
-                    console.log(dataUpdate);
-                    return <ProfileForm dataUpdate={dataUpdate} addProfiles={addProfiles}/>}
-                }
+                formFields={formFields}
+                onAddNew={handleAddNew}
+                onUpdateItem={handleUpdateItem}
+                onDelete={handleDeleteProfile}
             />
         </div>
     );

@@ -5,7 +5,7 @@ const Products = () => {
     return (
         <div>
             <NavBar/>
-            <ProductTable/>
+            {/*<ProductTable/>*/}
         </div>
     );
 };

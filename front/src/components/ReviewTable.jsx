@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import DataTable from './DataTable';
-import ReviewForm from './Form/ReviewForm.jsx';
 
 const ReviewTable = () => {
     const [reviews, setReviews] = useState([
@@ -22,10 +21,7 @@ const ReviewTable = () => {
             <DataTable
                 data={reviews}
                 columns={columns}
-                form={( dataUpdate = null) => {
-                    console.log(dataUpdate);
-                    return <ReviewForm  dataUpdate={dataUpdate}/>}
-                }
+
             />
         </div>
     );

@@ -1,6 +1,5 @@
 import DataTable from './DataTable';
 import { useEffect, useState } from 'react';
-import OrderItemForm from './Form/OrderItemForm.jsx';
 
 const OrderItemsTable = () => {
     const [orderItems, setOrderItems] = useState([]);
@@ -30,10 +29,7 @@ const OrderItemsTable = () => {
             <DataTable
                 data={orderItems}
                 columns={columns}
-                form={( dataUpdate = null) => {
-                    console.log(dataUpdate);
-                    return <OrderItemForm  dataUpdate={dataUpdate}/>}
-                }
+
             />
         </div>
     );

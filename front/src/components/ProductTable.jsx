@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import DataTable from './DataTable';
-import ProductForm from './Form/ProductForm.jsx';
 
 const ProductTable = () => {
     const [products, setProducts] = useState([
@@ -27,10 +26,7 @@ const ProductTable = () => {
             <DataTable
                 data={products}
                 columns={columns}
-                form={( dataUpdate = null) => {
-                    console.log(dataUpdate);
-                    return <ProductForm  dataUpdate={dataUpdate}/>}
-                }
+
             />
         </div>
     );

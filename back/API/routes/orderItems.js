@@ -6,6 +6,7 @@ import {
     getOrderItemsByOrderId,
     updateOrderItem
 } from "../controller/orderItems.js";
+import {manager} from "../middleware/auth/mustBe.js";
 
 const router = Router();
 
@@ -58,7 +59,7 @@ router.get("/all", getAllOrderItems);
  *          500:
  *              description: Server error
  */
-router.get("/:id", getOrderItemsByOrderId);
+router.get("/:id", manager, getOrderItemsByOrderId);
 
 /**
  * @swagger
@@ -84,7 +85,7 @@ router.get("/:id", getOrderItemsByOrderId);
  *          500:
  *              description: Server error
  */
-router.post("/", addOrderItems);
+router.post("/", manager, addOrderItems);
 
 /**
  * @swagger
@@ -105,7 +106,7 @@ router.post("/", addOrderItems);
  *          500:
  *              description: Server error
  */
-router.patch("/", updateOrderItem);
+router.patch("/", manager, updateOrderItem);
 
 /**
  * @swagger
@@ -133,6 +134,6 @@ router.patch("/", updateOrderItem);
  *          500:
  *              description: Server error
  */
-router.delete("/:order_id/:product_id", deleteOrderItemById);
+router.delete("/:order_id/:product_id", manager, deleteOrderItemById);
 
 export default router;

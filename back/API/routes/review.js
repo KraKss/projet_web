@@ -1,5 +1,6 @@
 import Router from "express-promise-router";
 import {addReview, deleteReviewById, getAllReviews, getReviewBySellerId, updateReview} from "../controller/review.js";
+import {manager} from "../middleware/auth/mustBe.js";
 
 /**
  * @swagger
@@ -43,10 +44,10 @@ import {addReview, deleteReviewById, getAllReviews, getReviewBySellerId, updateR
 const router = Router();
 
 router.post("/", addReview);
-router.patch("/", updateReview);
+router.patch("/", manager, updateReview);
 router.get("/all", getAllReviews);
-router.get("/:id", getReviewBySellerId);
-router.delete("/:reviewer_id/:seller_id", deleteReviewById);
+router.get("/:id", manager, getReviewBySellerId);
+router.delete("/:reviewer_id/:seller_id", manager, deleteReviewById);
 
 
 export default router;

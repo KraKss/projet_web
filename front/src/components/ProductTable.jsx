@@ -27,7 +27,10 @@ const ProductTable = () => {
             <DataTable
                 data={products}
                 columns={columns}
-                form={<ProductForm onSubmit={addProduct} dataUpdate={null} />}
+                form={( dataUpdate = null) => {
+                    console.log(dataUpdate);
+                    return <ProductForm  dataUpdate={dataUpdate}/>}
+                }
             />
         </div>
     );

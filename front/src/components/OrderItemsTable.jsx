@@ -30,7 +30,10 @@ const OrderItemsTable = () => {
             <DataTable
                 data={orderItems}
                 columns={columns}
-                form={<OrderItemForm onSubmit={addOrderItem} dataUpdate={null} />}
+                form={( dataUpdate = null) => {
+                    console.log(dataUpdate);
+                    return <OrderItemForm  dataUpdate={dataUpdate}/>}
+                }
             />
         </div>
     );

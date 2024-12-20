@@ -44,7 +44,10 @@ const ProfileTable = () => {
             <DataTable
                 data={profiles}
                 columns={columns}
-                form={<ProfileForm onSubmit={addProfile} dataUpdate={null} />}
+                form={( dataUpdate = null) => {
+                    console.log(dataUpdate);
+                    return <ProfileForm dataUpdate={dataUpdate}/>}
+                }
             />
         </div>
     );

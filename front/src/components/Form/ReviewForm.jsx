@@ -3,8 +3,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import Form from './Form.jsx';
 import { useForm } from 'react-hook-form';
+import {usePopup} from "../../provider/PopUpProvider.jsx";
 
 const ReviewForm = ({ dataUpdate }) => {
+
+    const {hidePopup } = usePopup();
+
     const idExist = dataUpdate?.reviewer_id !== undefined;
 
     const validationSchema = Yup.object().shape({
@@ -49,6 +53,7 @@ const ReviewForm = ({ dataUpdate }) => {
 
         console.log(formData);
 
+        hidePopup();
     };
 
     const onCancel = () => {

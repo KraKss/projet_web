@@ -1,80 +1,56 @@
-import { useState, useEffect } from "react";
-import {
-    addOrderItem,
-    deleteOrderItemById,
-    getOrderItemsByOrderId,
-    updateOrderItem
-} from "../API/controller/orderItems.js";
-import {addProfile, deleteProfileById, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
+import { useContext} from "react";
+import {addOrderItem, updateOrderItem, deleteOrderItemById} from "../API/controller/orderItems.js";
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { DataContext } from "../provider/DataContext.jsx";
 
 const OrderItemsTable = () => {
-    const [orderItems, setOrderItems] = useState([]);
+    const { orderItems, loadData } = useContext(DataContext);
     const { notification, showNotification } = useNotification();
-    const {id} = useParams();
-
-    const loadOrderItems = async () => {
-        try {
-            const data = await getOrderItemsByOrderId(parseInt(id));
-            console.log(data);
-            setOrderItems(data);
-        } catch (error) {
-            console.error("Erreur lors du chargement des orderItems", error);
-            showNotification("Une erreur est survenue lors de la récupération des orderItems", "error");
-        }
-    };
-
-    useEffect(() => {
-        loadOrderItems();
-    }, []);
+    const { id } = useParams();
 
     const handleAddNew = async (newOrderItem) => {
         try {
-            await addOrderItem(newOrderItem);
-            loadOrderItems();
+            await addOrderItem({ ...newOrderItem, order_id: parseInt(id) });
+            await loadData();
             showNotification("OrderItem ajouté avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de l'ajout du order item", error);
-            showNotification("Une erreur est survenue lors de l'ajout ", "error");
+            console.error("Erreur lors de l'ajout du OrderItem :", error);
+            showNotification("Une erreur est survenue lors de l'ajout", "error");
         }
     };
 
-    const handleUpdateItem = async (profile, updatedData) => {
+    const handleUpdateItem = async (orderItem, updatedData) => {
         try {
-            if (updatedData.balance) updatedData.balance = parseFloat(updatedData.balance);
-            if (!updatedData.password || updatedData.password === profile.password) {
-                delete updatedData.password;
-            }
-            await updateOrderItem(updatedData);
-            loadOrderItems();
-            showNotification("OrderItem modifier avec succès !", "success");
+            await updateOrderItem({ ...orderItem, ...updatedData });
+            await loadData();
+            showNotification("OrderItem modifié avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de la mise à jour du order item", error);
-            showNotification("Une erreur est survenue lors de la modification ", "error");
+            console.error("Erreur lors de la mise à jour du OrderItem :", error);
+            showNotification("Une erreur est survenue lors de la modification", "error");
         }
     };
 
     const handleDeleteOrderItem = async (orderItem) => {
         try {
             await deleteOrderItemById(orderItem.order_id, orderItem.product_id);
-            loadOrderItems();
-            showNotification("OrderItem supprimer avec succès !", "success");
+            await loadData();
+            showNotification("OrderItem supprimé avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de la suppression du order item", error);
+            console.error("Erreur lors de la suppression du OrderItem :", error);
             showNotification("Une erreur est survenue lors de la suppression", "error");
         }
     };
 
     const columns = ["order_id", "product_id", "quantity"];
-    const formFields = columns
+    const formFields = ["product_id", "quantity"];
 
     return (
         <div>
             <DataTable
-                data={orderItems}
+                data={orderItems.filter((item) => item.order_id === parseInt(id))}
                 columns={columns}
                 formFields={formFields}
                 onAddNew={handleAddNew}

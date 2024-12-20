@@ -1,39 +1,26 @@
-import { useState, useEffect } from "react";
-import {addProfile, deleteProfileById, getAllProfiles, updateProfile} from "../API/controller/profile.js";
+import { useContext } from "react";
+import { addProfile, deleteProfileById, updateProfile } from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
+import { DataContext } from "../provider/DataContext";
 
 const ProfileTable = () => {
-    const [profiles, setProfiles] = useState([]);
+    const { profiles, loadData } = useContext(DataContext);
     const { notification, showNotification } = useNotification();
-
-    const loadProfiles = async () => {
-        try {
-            const data = await getAllProfiles();
-            console.log(data);
-            setProfiles(data);
-        } catch (error) {
-            console.error("Erreur lors du chargement des profils", error);
-            showNotification("Une erreur est survenue lors de la récupération des profils", "error");
-        }
-    };
-
-    useEffect(() => {
-        loadProfiles();
-    }, []);
 
     const handleAddNew = async (newProfileData) => {
         if (newProfileData.balance) newProfileData.balance = parseFloat(newProfileData.balance);
         try {
             await addProfile(newProfileData);
-            loadProfiles();
+            await loadData();
             showNotification("Profil ajouté avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de l'ajout du profil", error);
-            showNotification("Une erreur est survenue lors de l'ajout ", "error");
+            showNotification("Une erreur est survenue lors de l'ajout", "error");
         }
     };
+
 
     const handleUpdateItem = async (profile, updatedData) => {
         try {
@@ -42,19 +29,19 @@ const ProfileTable = () => {
                 delete updatedData.password;
             }
             await updateProfile(updatedData);
-            loadProfiles();
-            showNotification("Profil modifier avec succès !", "success");
+            await loadData();
+            showNotification("Profil modifié avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de la mise à jour du profil", error);
-            showNotification("Une erreur est survenue lors de la modification ", "error");
+            showNotification("Une erreur est survenue lors de la modification", "error");
         }
     };
 
     const handleDeleteProfile = async (profile) => {
         try {
             await deleteProfileById(profile.id);
-            loadProfiles();
-            showNotification("Profil supprimer avec succès !", "success");
+            await loadData();
+            showNotification("Profil supprimé avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de la suppression du profil", error);
             showNotification("Une erreur est survenue lors de la suppression", "error");

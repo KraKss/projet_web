@@ -1,63 +1,49 @@
-import { useState, useEffect } from "react";
-import {addProduct, deleteProductById, getAllProducts, updateProduct} from "../API/controller/product.js";
+import { useContext } from "react";
+import { addProduct, updateProduct, deleteProductById } from "../API/controller/product.js";
 import DataTable from "./DataTable";
 import useNotification from '../hook/useNotification.js';
 import Notification from "./Notification";
+import { DataContext } from "../provider/DataContext";
 
 const ProductTable = () => {
-    const [products, setProducts] = useState([]);
+    const { products, loadData } = useContext(DataContext);
     const { notification, showNotification } = useNotification();
-
-    const loadProduct = async () => {
-        try {
-            const data = await getAllProducts();
-            console.log(data);
-            setProducts(data);
-        } catch (error) {
-            console.error("Erreur lors du chargement des review", error);
-            showNotification("Une erreur est survenue lors de la récupération des review", "error");
-        }
-    };
-
-    useEffect(() => {
-        loadProduct();
-    }, []);
 
     const handleAddNew = async (newProductData) => {
         try {
             await addProduct(newProductData);
-            loadProduct();
-            showNotification("Product ajouté avec succès !", "success");
+            await loadData();
+            showNotification("Produit ajouté avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de l'ajout du product", error);
-            showNotification("Une erreur est survenue lors de l'ajout ", "error");
+            console.error("Erreur lors de l'ajout du produit :", error);
+            showNotification("Une erreur est survenue lors de l'ajout", "error");
         }
     };
 
     const handleUpdateItem = async (product, updatedData) => {
         try {
-            await updateProduct(updatedData);
-            loadProduct();
-            showNotification("Product modifier avec succès !", "success");
+            await updateProduct({ ...product, ...updatedData });
+            await loadData();
+            showNotification("Produit modifié avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de la mise à jour du product", error);
-            showNotification("Une erreur est survenue lors de la modification ", "error");
+            console.error("Erreur lors de la mise à jour du produit :", error);
+            showNotification("Une erreur est survenue lors de la modification", "error");
         }
     };
 
     const handleDeleteProduct = async (product) => {
         try {
             await deleteProductById(product.id);
-            loadProduct();
-            showNotification("Product supprimer avec succès !", "success");
+            await loadData();
+            showNotification("Produit supprimé avec succès !", "success");
         } catch (error) {
-            console.error("Erreur lors de la suppression du product", error);
+            console.error("Erreur lors de la suppression du produit :", error);
             showNotification("Une erreur est survenue lors de la suppression", "error");
         }
     };
 
     const columns = ["id", "seller_id", "name", "description", "price", "filament_type"];
-    const formFields = ["seller_id", "name", "description", "price", "filament_type"];
+    const formFields = ["name", "description", "price", "filament_type"];
 
     return (
         <div>

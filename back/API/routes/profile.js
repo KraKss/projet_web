@@ -8,7 +8,6 @@ import {
 } from '../controller/profile.js';
 import {authBasic} from '../middleware/auth/basic.js';
 import {manager} from '../middleware/auth/mustBe.js';
-import {profileValidatorMiddlewares as PVM} from '../middleware/validation.js';
 
 const router = Router();
 
@@ -31,7 +30,7 @@ const router = Router();
  *          500:
  *              description: Server error
  */
-router.post('/', PVM.profileToAdd, addProfile);
+router.post('/', addProfile);
 
 /**
  * @swagger
@@ -52,7 +51,7 @@ router.post('/', PVM.profileToAdd, addProfile);
  *          500:
  *              description: Server error
  */
-router.patch('/', PVM.profileToUpdate, updateProfile);
+router.patch('/', updateProfile);
 
 /**
  * @swagger
@@ -112,6 +111,6 @@ router.get('/:id', authBasic, manager, getProfileById);
  *          500:
  *              description: Server error
  */
-router.delete('/:id', PVM.profileToDelete, deleteProfileById);
+router.delete('/:id', deleteProfileById);
 
 export default router;

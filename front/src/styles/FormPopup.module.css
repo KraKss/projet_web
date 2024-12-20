@@ -59,3 +59,8 @@ button[type="button"] {
     background-color: #f44336;
     color: white;
 }
+.error {
+    color: red; /* Couleur rouge pour les messages d'erreur */
+    font-size: 12px; /* Police légèrement plus petite */
+    margin-top: 5px; /* Espacement entre le champ et l'erreur */
+}

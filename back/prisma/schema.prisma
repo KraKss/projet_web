@@ -7,30 +7,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model manager {
+  id       Int     @id @default(autoincrement())
+  name     String? @db.VarChar
+  email    String? @unique @db.VarChar
+  password String? @db.VarChar
+}
+
 model order_items {
   order_id   Int
   product_id Int
   quantity   Int
-  orders     orders  @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  product    product @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orders     orders  @relation(fields: [order_id], references: [order_id], onDelete: NoAction, onUpdate: NoAction)
+  product    product @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([order_id, product_id])
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model orders {
-  id              Int              @id @default(autoincrement())
+  order_id        Int           @id @default(autoincrement())
   buyer_id        Int
-  payment_status  payment_status?  @default(pending)
-  shipping_status shipping_status? @default(not_shipped)
-  order_date      DateTime?        @default(now()) @db.Timestamp(6)
+  payment_status  String?       @default("pending") @db.VarChar(255)
+  shipping_status String?       @default("not_shipped") @db.VarChar(255)
+  order_date      DateTime?     @default(now()) @db.Timestamp(6)
   order_items     order_items[]
-  profile         profile          @relation(fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  profile         profile       @relation(fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model product {
-  id            Int           @id @default(autoincrement())
+  product_id    Int           @id @default(autoincrement())
   seller_id     Int
   name          String        @db.VarChar(255)
   description   String?
@@ -54,34 +59,14 @@ model profile {
   review_review_seller_idToprofile   review[]  @relation("review_seller_idToprofile")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model review {
   reviewer_id                         Int
   seller_id                           Int
-  rating                              Int       @default(0)
+  rating                              Int?
   comment                             String?
   review_date                         DateTime? @default(now()) @db.Timestamp(6)
   profile_review_reviewer_idToprofile profile   @relation("review_reviewer_idToprofile", fields: [reviewer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   profile_review_seller_idToprofile   profile   @relation("review_seller_idToprofile", fields: [seller_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([reviewer_id, seller_id])
-}
-
-model manager {
-  id       Int     @id @default(autoincrement())
-  name     String? @db.VarChar
-  email    String? @unique @db.VarChar
-  password String? @db.VarChar
-}
-
-enum payment_status {
-  pending
-  completed
-  failed
-}
-
-enum shipping_status {
-  not_shipped
-  shipped
-  delivered
 }

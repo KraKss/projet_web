@@ -2,6 +2,67 @@ import prisma from "../../database/databseORM.js";
 import {profileSchema, updateProfileSchema} from "../middleware/validator/profile.js";
 import {hash} from "../../utils/hash.js";
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      ProfileToAdd:
+ *          type: object
+ *          properties:
+ *              name:
+ *                  type: string
+ *              email:
+ *                  type: string
+ *              password:
+ *                  type: string
+ *              address:
+ *                  type: string
+ *              bank_account:
+ *                  type: string
+ *              balance:
+ *                  type: number
+ *      ProfileToUpdate:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *                  description : the id of the acc you want to update
+ *              name:
+ *                  type: string
+ *              email:
+ *                  type: string
+ *              address:
+ *                  type: string
+ *              bank_account:
+ *                  type: string
+ *              balance:
+ *                  type: number
+ *  responses:
+ *      ProfileResponse:
+ *          description: The profile
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/ProfileToAdd'
+ *      ProfileListResponse:
+ *          description: List of profiles
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: array
+ *                      items:
+ *                          $ref: '#/components/schemas/ProfileToAdd'
+ *      ProfileAdded:
+ *          description: Profile created successfully
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: integer
+ */
+
 export const getProfileById = async (req, res)=> {
     try {
         const profile = await prisma.profile.findUnique({
@@ -113,3 +174,6 @@ export const deleteProfileById = async (req, res) => {
         res.sendStatus(500);
     }
 }
+
+
+

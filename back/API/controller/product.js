@@ -1,6 +1,55 @@
 import prisma from "../../database/databseORM.js";
 import {productSchema, updateProductSchema} from "../middleware/validator/product.js";
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Product:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *              seller_id:
+ *                  type: integer
+ *              name:
+ *                  type: string
+ *              description:
+ *                  type: string
+ *              price:
+ *                  type: number
+ *              filament_type:
+ *                  type: string
+ *  responses:
+ *      ProductResponse:
+ *          description: The product details
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Product'
+ *      ProductListResponse:
+ *          description: List of all products
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: array
+ *                      items:
+ *                          $ref: '#/components/schemas/Product'
+ *      ProductAdded:
+ *          description: Product created successfully
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: integer
+ *      ProductUpdated:
+ *          description: Product updated successfully
+ *      ProductDeleted:
+ *          description: Product deleted successfully
+ */
+
 export const getProductById = async (req, res)=> {
     try {
         const product = await prisma.product.findUnique({

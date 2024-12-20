@@ -8,8 +8,6 @@ import log from "eslint-plugin-react/lib/util/log.js";
 import {usePopup} from "../provider/PopUpProvider.jsx";
 
 const DataTable = ({ data, columns, seeJoinedTable, form}) => {
-
-    console.log("fgbdfjhgkdjfhgkjdfhgjkdfhgkj");
     const { showPopup,hidePopup } = usePopup();
 
     const handlePopupForm = (data = null) => {

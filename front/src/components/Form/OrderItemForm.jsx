@@ -3,8 +3,11 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import Form from './Form';
+import {usePopup} from "../../provider/PopUpProvider.jsx";
 
 const OrderItemForm = ({ dataUpdate }) => {
+
+    const {hidePopup } = usePopup();
 
     const validationSchema = Yup.object().shape({
         order_id: Yup.number().integer('Order ID must be an integer').required('Order ID is required'),
@@ -53,6 +56,7 @@ const OrderItemForm = ({ dataUpdate }) => {
         } else {
             console.log("New Data:", data);
         }
+        hidePopup();
     };
 
     const onCancel = () => {

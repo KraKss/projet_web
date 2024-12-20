@@ -1,10 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import Form from './Form.jsx'; // Composant Form
+import Form from './Form.jsx';
+import {usePopup} from "../../provider/PopUpProvider.jsx"; // Composant Form
 
 
 const ProductForm = ({ dataUpdate}) => {
+
+    const {hidePopup } = usePopup();
 
     const validationSchema = Yup.object().shape({
         seller_id: Yup.number().required("Seller ID is required").positive("Must be positive").integer("Must be entire"),
@@ -82,6 +85,7 @@ const ProductForm = ({ dataUpdate}) => {
             formData.append(key, value);
         }
         console.log(formData);
+        hidePopup();
     };
 
     const onCancel = () => {

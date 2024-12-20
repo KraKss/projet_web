@@ -1,10 +1,9 @@
 import axios from 'axios';
-
-const BASE_URL = 'http://localhost:3001/api';
+import API_ROUTES from "./apiRoutes.js";
 
 const sendForm = async (route, formData) => {
     try {
-        const response = await axios.post(`${BASE_URL}/${route}`, formData, {
+        const response = await axios.post(`${API_ROUTES.API_ROUTE}/${route}`, formData, {
             headers: {'Content-Type': 'multipart/form-data'}
         });
         return response.data;

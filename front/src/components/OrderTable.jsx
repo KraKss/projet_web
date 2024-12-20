@@ -1,28 +1,81 @@
-import React, { useState } from 'react';
-import DataTable from './DataTable';
+import { useState, useEffect } from "react";
+import {addProfile, deleteProfileById, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
+import {getAllOrders} from "../API/controller/order.js";
+import DataTable from "./DataTable";
+import useNotification from '../hook/useNotification.js';
+import Notification from "./Notification";
 
 const OrderTable = () => {
-    const [orders, setOrders] = useState([
-        { order_id: 1, buyer_id: 2, payment_status: 'Paid', shipping_status: 'Shipped', order_date: '2024-12-01' },
-        { order_id: 2, buyer_id: 3, payment_status: 'Pending', shipping_status: 'Processing', order_date: '2024-12-02' },
-    ]);
+    const [orders, setOrders] = useState([]);
+    const { notification, showNotification } = useNotification();
 
-    const columns = ['order_id', 'buyer_id', 'payment_status', 'shipping_status', 'order_date'];
-
-    const addOrder = (newOrder) => {
-        setOrders((prevOrders) => [
-            ...prevOrders,
-            { ...newOrder, order_id: prevOrders.length + 1, order_date: new Date().toISOString().split('T')[0] },
-        ]);
+    const loadOrders = async () => {
+        try {
+            const data = await getAllOrders();
+            console.log(data);
+            setOrders(data);
+        } catch (error) {
+            console.error("Erreur lors du chargement des orders", error);
+            showNotification("Une erreur est survenue lors de la récupération des orders", "error");
+        }
     };
+
+    useEffect(() => {
+        loadOrders();
+    }, []);
+
+    const handleAddNew = async (newProfileData) => {
+        if (newProfileData.balance) newProfileData.balance = parseFloat(newProfileData.balance);
+        try {
+            await addProfile(newProfileData);
+            loadOrders();
+            showNotification("Profil ajouté avec succès !", "success");
+        } catch (error) {
+            console.error("Erreur lors de l'ajout du profil", error);
+            showNotification("Une erreur est survenue lors de l'ajout ", "error");
+        }
+    };
+
+    const handleUpdateItem = async (profile, updatedData) => {
+        try {
+            if (updatedData.balance) updatedData.balance = parseFloat(updatedData.balance);
+            if (!updatedData.password || updatedData.password === profile.password) {
+                delete updatedData.password;
+            }
+            await updateProfile(updatedData);
+            loadOrders();
+            showNotification("Profil modifier avec succès !", "success");
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour du profil", error);
+            showNotification("Une erreur est survenue lors de la modification ", "error");
+        }
+    };
+
+    const handleDeleteOrder = async (profile) => {
+        try {
+            await deleteProfileById(profile.id);
+            loadOrders();
+            showNotification("Profil supprimer avec succès !", "success");
+        } catch (error) {
+            console.error("Erreur lors de la suppression du profil", error);
+            showNotification("Une erreur est survenue lors de la suppression", "error");
+        }
+    };
+
+    const columns = ["id", "buyer_id", "payment_status", "shipping_status", "order_date"];
+    const formFields = ["buyer_id", "payment_status", "shipping_status"];
 
     return (
         <div>
-            {/*<DataTable*/}
-            {/*    data={orders}*/}
-            {/*    columns={columns}*/}
-            {/*    seeJoinedTable ={true}*/}
-            {/*/>*/}
+            <DataTable
+                data={orders}
+                columns={columns}
+                formFields={formFields}
+                onAddNew={handleAddNew}
+                onUpdateItem={handleUpdateItem}
+                onDelete={handleDeleteOrder}
+            />
+            <Notification notification={notification} />
         </div>
     );
 };

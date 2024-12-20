@@ -1,8 +1,9 @@
 import apiClient from "../http.js";
+import API_ROUTES from "../apiRoutes.js";
 
 const getAllProfiles = async () => {
     try {
-        const { data } = await apiClient.get("/profile/all");
+        const { data } = await apiClient.get(`${API_ROUTES.PROFILE_ROUTE}/all`);
         return data;
     } catch (e) {
         throw new Error("Une erreur est survenue, réessayer plus tard: " + e);
@@ -12,7 +13,7 @@ const getAllProfiles = async () => {
 const addProfile = async (profile) => {
     try {
         if (profile.balance) profile.balance = parseFloat(profile.balance);
-        const { data } = await apiClient.post("/profile", profile);
+        const { data } = await apiClient.post(API_ROUTES.PROFILE_ROUTE, profile);
         return data;
     } catch (e) {
         throw new Error("Une erreur est survenue, réessayer plus tard: " + e);
@@ -27,7 +28,7 @@ const updateProfile = async (updatedData) => {
         }
         if (updatedData.balance) updatedData.balance = parseFloat(updatedData.balance);
 
-        const { data } = await apiClient.patch(`/profile/`, updatedData);
+        const { data } = await apiClient.patch(`${API_ROUTES.PROFILE_ROUTE}/`, updatedData);
         return data;
     } catch (e) {
         throw new Error("Une erreur est survenue, réessayer plus tard: " + e);
@@ -36,7 +37,7 @@ const updateProfile = async (updatedData) => {
 
 const deleteProfileById = async (id) => {
     try {
-        await apiClient.delete(`/profile/${id}`);
+        await apiClient.delete(`${API_ROUTES.PROFILE_ROUTE}/${id}`);
     } catch (e) {
         throw new Error("Une erreur est survenue, réessayer plus tard: " + e);
     }

@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import {addProfile, deleteProfileById, getAllProfiles, updateProfile} from "../API/controller/profile.js"; // Assurez-vous d'avoir les bonnes fonctions API
 import DataTable from "./DataTable";
+import useNotification from '../hook/useNotification.js';
+import Notification from "./Notification";
 
 const ProfileTable = () => {
     const [profiles, setProfiles] = useState([]);
+    const { notification, showNotification } = useNotification();
 
     const loadProfiles = async () => {
         try {
@@ -12,6 +15,7 @@ const ProfileTable = () => {
             setProfiles(data);
         } catch (error) {
             console.error("Erreur lors du chargement des profils", error);
+            showNotification("Une erreur est survenue lors de la récupération des profils", "error");
         }
     };
 
@@ -24,8 +28,10 @@ const ProfileTable = () => {
         try {
             await addProfile(newProfileData);
             loadProfiles();
+            showNotification("Profil ajouté avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de l'ajout du profil", error);
+            showNotification("Une erreur est survenue lors de l'ajout ", "error");
         }
     };
 
@@ -37,8 +43,10 @@ const ProfileTable = () => {
             }
             await updateProfile(updatedData);
             loadProfiles();
+            showNotification("Profil modifier avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de la mise à jour du profil", error);
+            showNotification("Une erreur est survenue lors de la modification ", "error");
         }
     };
 
@@ -46,8 +54,10 @@ const ProfileTable = () => {
         try {
             await deleteProfileById(profile.id);
             loadProfiles();
+            showNotification("Profil supprimer avec succès !", "success");
         } catch (error) {
             console.error("Erreur lors de la suppression du profil", error);
+            showNotification("Une erreur est survenue lors de la suppression", "error");
         }
     };
 
@@ -64,6 +74,7 @@ const ProfileTable = () => {
                 onUpdateItem={handleUpdateItem}
                 onDelete={handleDeleteProfile}
             />
+            <Notification notification={notification} />
         </div>
     );
 };

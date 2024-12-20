@@ -6,6 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
     "initDB": "node scripts/JS/initDB.js",
+    "initAndInsertDB": "node scripts/JS/initAndInsertDB.js",
     "genDoc": "node ./swagger/swagger_jsdoc.js"
   },
   "keywords": [],

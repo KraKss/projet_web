@@ -4,7 +4,8 @@ import {
     updateProfile,
     getProfileById,
     getAllProfiles,
-    deleteProfileById
+    deleteProfileById,
+    getProfileByEmail
 } from '../controller/profile.js';
 import {authBasic} from '../middleware/auth/basic.js';
 import {manager} from '../middleware/auth/mustBe.js';
@@ -91,6 +92,8 @@ router.get('/all', manager, getAllProfiles);
  *              description: Server error
  */
 router.get('/:id', getProfileById);
+
+router.get('/', getProfileByEmail);
 
 /**
  * @swagger

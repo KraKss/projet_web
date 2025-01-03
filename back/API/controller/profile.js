@@ -80,6 +80,32 @@ export const getProfileById = async (req, res)=> {
     }
 };
 
+export const getProfileByEmail = async (req, res) => {
+    try {
+        const { email } = req.query;
+
+        if (!email) {
+            return res.status(400).send('Email is required');
+        }
+
+        const profile = await prisma.profile.findUnique({
+            where: {
+                email: email,
+            },
+        });
+
+        if (profile) {
+            res.send(profile);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+};
+
+
 export const getAllProfiles = async (req, res) => {
     try {
         const profiles = await prisma.profile.findMany({

@@ -6,6 +6,6 @@ const API_ROUTES = {
     REVIEW_ROUTE: "/review",
     ORDER_ROUTE: "/order",
     ORDER_ITEMS_ROUTE: "/order/items",
-}
+} // mettre .env 
 
 export default API_ROUTES;

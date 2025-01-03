@@ -66,6 +66,87 @@ export const getProductById = async (req, res)=> {
         res.sendStatus(500);
     }
 };
+// getMostPopularProducts
+export const getMostPopularProducts = async (req, res) => {
+    try {
+        // Première étape : obtenir le top 5 des produits les plus commandés
+        const products = await prisma.product.findMany({
+            where: {
+                order_items: {
+                    some: {}, // Vérifier s'il existe des articles de commande associés
+                },
+            },
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                price: true,
+                order_items: {
+                    select: {
+                        product_id: true,
+                    },
+                },
+            },
+        });
+
+        // Deuxième étape : compter les commandes pour chaque produit
+        const productOrderCounts = await prisma.order_items.groupBy({
+            by: ['product_id'],
+            _count: {
+                product_id: true, // Compter le nombre de fois que chaque produit est commandé
+            },
+            orderBy: {
+                _count: {
+                    product_id: 'desc', // Trier par nombre de commandes
+                },
+            },
+            take: 5, // Limiter à 5 produits les plus commandés
+        });
+
+        // Fusionner les informations de produits avec leur nombre de commandes
+        const topProducts = products
+            .map((product) => {
+                const orderCount = productOrderCounts.find(
+                    (item) => item.product_id === product.id
+                );
+                return {
+                    ...product,
+                    order_count: orderCount ? orderCount._count.product_id : 0,
+                };
+            })
+            .sort((a, b) => b.order_count - a.order_count); // Trier par nombre de commandes
+
+        if (topProducts.length > 0) {
+            res.status(200).json(topProducts);
+        } else {
+            res.status(404).send("No products found");
+        }
+    } catch (err) {
+        console.error("Error fetching most ordered products:", err); // Affiche l'erreur dans la console
+        res.status(500).send(`An error occurred while fetching products: ${err.message}`);
+    }
+};
+
+
+export const getMostRecentProducts = async (req, res) => {
+    try {
+        const products = await prisma.product.findMany({
+            orderBy: {
+                id: "desc"
+            },
+            take: 4
+        });
+
+        if (products.length > 0) {
+            res.status(200).json(products);
+        } else {
+            res.status(404).send("No products found")
+        }
+    } catch (e) {
+        console.error(err);
+        res.status(500).send("An error occurred while fetching products");
+    }
+}
 
 export const getAllProducts = async (req, res) => {
     try {

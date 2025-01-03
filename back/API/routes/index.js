@@ -6,11 +6,13 @@ import {default as reviewRouter} from "./review.js";
 import {default as orderRouter} from "./order.js";
 import {default as orderItemsRouter} from "./orderItems.js";
 import {login} from "../controller/login.js";
+import {createAccount} from "../controller/createAccount.js";
 import {checkJWT} from "../middleware/auth/checkJWT.js";
 
 const router = Router();
 
 router.post("/api/v1/login", login);
+router.post("/api/v1/create", createAccount);
 router.use("/api/v1/profile", checkJWT, profileRouter);
 router.use("/api/v1/product", checkJWT, productRouter);
 router.use("/api/v1/review", checkJWT, reviewRouter);

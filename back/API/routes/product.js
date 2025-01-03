@@ -4,7 +4,9 @@ import {
     deleteProductById,
     getAllProducts,
     getProductById,
-    updateProduct
+    updateProduct,
+    getMostRecentProducts,
+    getMostPopularProducts
 } from "../controller/product.js";
 import {manager} from "../middleware/auth/mustBe.js";
 
@@ -30,6 +32,9 @@ const router = Router();
  *              description: Server error
  */
 router.get("/all", manager, getAllProducts);
+
+router.get("/recents", getMostRecentProducts);
+router.get("/popular", getMostPopularProducts)
 
 /**
  * @swagger

@@ -236,3 +236,43 @@ export const deleteProductById = async (req, res) => {
         res.sendStatus(500);
     }
 }
+
+export const getProductsBySellerId = async (req, res) => {
+    try {
+        const { seller_id } = req.params;
+        console.log("Requête reçue pour seller_id:", seller_id); // 🔥 Debug
+
+        if (!seller_id) {
+            return res.status(400).json({ error: "L'ID du vendeur est requis." });
+        }
+
+        // Vérifier si le vendeur existe (optionnel)
+        const sellerExists = await prisma.profile.findUnique({
+            where: { id: parseInt(seller_id) }
+        });
+
+        if (!sellerExists) {
+            return res.status(404).json({ error: "Le vendeur n'existe pas." });
+        }
+
+        // ✅ Récupérer tous les produits associés au `seller_id`
+        const products = await prisma.product.findMany({
+            where: { seller_id: parseInt(seller_id) },
+            orderBy: { id: "desc" } // Trier du plus récent au plus ancien
+        });
+
+        console.log("Produits récupérés :", products);
+
+        if (products.length === 0) {
+            return res.status(404).json({ message: "Aucun produit trouvé pour ce vendeur." });
+        }
+
+        res.status(200).json(products);
+    } catch (error) {
+        console.error("Erreur lors de la récupération des produits:", error);
+        res.status(500).json({
+            error: "Erreur serveur",
+            details: error.message,
+        });
+    }
+};

@@ -46,7 +46,7 @@ const router = Router();
 router.post("/", addReview);
 router.patch("/", manager, updateReview);
 router.get("/all", getAllReviews);
-router.get("/:id", manager, getReviewBySellerId);
+router.get("/:seller_id", getReviewBySellerId);
 router.delete("/:reviewer_id/:seller_id", manager, deleteReviewById);
 
 

@@ -1,5 +1,6 @@
 import Router from "express-promise-router";
 import {
+    getProductsBySellerId,
     addProduct,
     deleteProductById,
     getAllProducts,
@@ -32,7 +33,7 @@ const router = Router();
  *              description: Server error
  */
 router.get("/all", manager, getAllProducts);
-
+router.get("/seller/:seller_id", getProductsBySellerId);
 router.get("/recents", getMostRecentProducts);
 router.get("/popular", getMostPopularProducts)
 

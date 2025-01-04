@@ -44,23 +44,50 @@ import {hash} from "../../utils/hash.js";
  *          description: Review deleted successfully
  */
 
-export const getReviewBySellerId = async (req, res)=> {
+
+
+export const getReviewBySellerId = async (req, res) => {
     try {
-        const review = await prisma.review.findMany({
-            where:{
-                seller_id: parseInt(req.params.id)
-            }
-        });
-        if (review.length > 0) {
-            res.send(review);
-        } else {
-            res.sendStatus(404);
+        const { seller_id } = req.params;
+        console.log("Requête reçue pour seller_id:", seller_id); // 🔥 Debug
+
+        if (!seller_id) {
+            return res.status(400).json({ error: "L'ID du vendeur est requis." });
         }
-    } catch (err) {
-        console.error(err);
-        res.sendStatus(500);
+
+        // 🔥 Vérifier si le vendeur existe
+        const sellerExists = await prisma.profile.findUnique({
+            where: { id: parseInt(seller_id) }
+        });
+
+        if (!sellerExists) {
+            return res.status(404).json({ error: "Le vendeur n'existe pas." });
+        }
+
+        // ✅ Récupérer toutes les reviews associées au `seller_id`
+        const reviews = await prisma.review.findMany({
+            where: { seller_id: parseInt(seller_id) },
+            orderBy: { review_date: "desc" } // 🔄 Trier du plus récent au plus ancien
+        });
+
+        console.log("Reviews récupérées :", reviews);
+
+        if (reviews.length === 0) {
+            return res.status(404).json({ message: "Aucune review trouvée pour ce vendeur." });
+        }
+
+        res.status(200).json(reviews);
+    } catch (error) {
+        console.error("Erreur lors de la récupération des reviews:", error);
+        res.status(500).json({
+            error: "Erreur serveur",
+            details: error.message,
+        });
     }
 };
+
+
+
 
 export const getAllReviews = async (req, res) => {
     try {

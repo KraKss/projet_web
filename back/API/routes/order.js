@@ -4,11 +4,17 @@ import {
     updateOrder,
     getAllOrders,
     getOrderById,
-    deleteOrderById
+    deleteOrderById,
+    createOrder,
+    getOrdersByBuyer
 } from "../controller/order.js";
 import {manager} from "../middleware/auth/mustBe.js";
 
 const router = Router();
+router.post("/create", createOrder);
+router.get("/buyer/:buyer_id", getOrdersByBuyer);
+
+
 
 /**
  * @swagger

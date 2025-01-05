@@ -61,6 +61,60 @@ export const getOrderById = async (req, res)=> {
     }
 };
 
+export const getOrdersByBuyer = async (req, res) => {
+    try {
+        const buyerId = parseInt(req.params.buyer_id);
+
+        if (isNaN(buyerId)) {
+            return res.status(400).json({ error: "buyer_id invalide" });
+        }
+
+        // Récupérer uniquement les commandes du buyer_id
+        const orders = await prisma.orders.findMany({
+            where: { buyer_id: buyerId },
+            orderBy: { order_date: "desc" } // Trier par date décroissante
+        });
+
+        if (!orders.length) {
+            return res.status(404).json({ message: "Aucune commande trouvée pour cet utilisateur" });
+        }
+
+        res.status(200).json(orders);
+    } catch (error) {
+        console.error("Erreur lors de la récupération des commandes :", error);
+        res.status(500).json({ error: "Une erreur est survenue", details: error.message });
+    }
+};
+
+
+export const createOrder = async (req, res) => {
+    try {
+        const { buyer_id, payment_status, shipping_status } = req.body;
+        console.log("logtest",buyer_id, payment_status, shipping_status);
+        if (!buyer_id || !payment_status || !shipping_status) {
+            return res.status(400).json({ error: "Tous les champs sont requis (buyer_id, payment_status, shipping_status)." });
+        }
+
+
+        const newOrder = await prisma.orders.create({
+            data: {
+                buyer_id,
+                payment_status,
+                shipping_status,
+                order_date: new Date(),
+            },
+            select: { id: true }
+        });
+
+        res.status(201).json({ order_id: newOrder.id });
+
+    } catch (error) {
+        console.error("Erreur lors de la création de la commande :", error);
+        res.status(500).json({ error: "Erreur serveur", details: error.message });
+    }
+};
+
+
 export const getAllOrders = async (req, res) => {
     try {
         const orders = await prisma.orders.findMany({

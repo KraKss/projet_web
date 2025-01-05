@@ -85,7 +85,7 @@ router.get("/:id", manager, getOrderItemsByOrderId);
  *          500:
  *              description: Server error
  */
-router.post("/", manager, addOrderItems);
+router.post("/", addOrderItems);
 
 /**
  * @swagger

@@ -57,12 +57,12 @@ import {z} from "zod";
 export const orderSchema = z.object({
     buyer_id: z.number().nonnegative(),
     payment_status: z.enum(["pending", "completed", "failed"]).optional(),
-    shipping_status: z.enum(["not_shipped", "shipped", "delivered"]).optional()
+    shipping_status: z.enum(["not_shipped", "shipped", "delivered","in_transit"]).optional()
 })
 
 export const updateOrderSchema = z.object({
     order_id: z.number().nonnegative(),
     buyer_id: z.number().nonnegative().optional(),
     payment_status: z.enum(["pending", "completed", "failed"]).optional(),
-    shipping_status: z.enum(["not_shipped", "shipped", "delivered"]).optional()
+    shipping_status: z.enum(["not_shipped", "shipped", "delivered","in_transit"]).optional()
 })

@@ -55,7 +55,7 @@ router.post('/upload-image', upload.single('image'), uploadProfileImage);
  *          500:
  *              description: Server error
  */
-router.patch('/', manager, updateProfile);
+router.patch('/', updateProfile);
 
 /**
  * @swagger

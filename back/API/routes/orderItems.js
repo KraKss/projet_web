@@ -59,7 +59,7 @@ router.get("/all", getAllOrderItems);
  *          500:
  *              description: Server error
  */
-router.get("/:id", manager, getOrderItemsByOrderId);
+router.get("/:id", getOrderItemsByOrderId);
 
 /**
  * @swagger

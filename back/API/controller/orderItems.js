@@ -45,11 +45,14 @@ import {itemSchema, requestBodySchema} from "../middleware/validator/orderItems.
 
 export const getOrderItemsByOrderId = async (req, res)=> {
     try {
+        console.log("id pour oderItem vuolu : ",parseInt(req.params.id));
         const itemsList = await prisma.order_items.findMany({
             where: {
                 order_id: parseInt(req.params.id)
             },
         });
+
+        console.log("Resultat : ",itemsList);
 
         if (itemsList.length > 0) res.send(itemsList);
         else res.sendStatus(404);

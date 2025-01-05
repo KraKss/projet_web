@@ -66,7 +66,7 @@ export const getProductById = async (req, res)=> {
         res.sendStatus(500);
     }
 };
-// getMostPopularProducts
+
 export const getMostPopularProducts = async (req, res) => {
     try {
         // Première étape : obtenir le top 5 des produits les plus commandés

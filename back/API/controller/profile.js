@@ -1,7 +1,7 @@
 import prisma from "../../database/databseORM.js";
 import {profileSchema, updateProfileSchema} from "../middleware/validator/profile.js";
 import {hash} from "../../utils/hash.js";
-import {saveImage} from "../../utils/imageManager.js";
+import {saveImage, deleteImage} from "../../utils/imageManager.js";
 import * as uuid from "uuid";
 
 
@@ -133,13 +133,11 @@ export const addProfile = async (req, res) => {
         if (req.body.balance) req.body.balance = parseFloat(req.body.balance);
         const {name, email, password, address, bank_account, balance} = req.body;
 
-        const floatBalance = parseFloat(balance);
-        console.log("balance : ", balance, floatBalance, typeof balance)
         const validatedBody = profileSchema.parse({
             name, email, password, address, bank_account, balance
         })
         const hashedPassword = await hash(password, 10);
-        console.log("valid balance : ", validatedBody.balance)
+
         let imagePath = null;
         if (req.file) {
             const imageName = uuid.v4();
@@ -167,6 +165,51 @@ export const addProfile = async (req, res) => {
             error: "une erreur est survenue",
             details: e.message
         });
+    }
+}
+
+export const uploadProfileImage = async (req, res) => {
+    try {
+        const userId = parseInt(req.body.userId)
+        let imagePath = null;
+        
+        const oldImage = await prisma.profile.findUnique({
+            where: {
+                id: userId
+            },
+            select: {
+                image: true
+            }
+        })
+
+        if (oldImage && oldImage.image) {
+            if (req.file) {
+                const imageName = uuid.v4();
+                imagePath = `${imageName}.jpeg`;
+                await saveImage(req.file.buffer, imageName, "./upload");
+                await deleteImage(oldImage.image);
+            }
+        }
+
+        const imageCreated = await prisma.profile.update({
+            data: {
+                image: imagePath
+            },
+            where: {
+                id: userId
+            },
+            select: {
+                image: true
+            }
+        })
+
+        res.status(201).send({imageCreated});
+    } catch(e) {
+        console.error(e);
+        return res.status(500).json({
+            error: "une erreur est survenue",
+            details: e.message
+        }); 
     }
 }
 

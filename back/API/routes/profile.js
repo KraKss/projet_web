@@ -5,7 +5,8 @@ import {
     getProfileById,
     getAllProfiles,
     deleteProfileById,
-    getProfileByEmail
+    getProfileByEmail,
+    uploadProfileImage
 } from '../controller/profile.js';
 import {manager} from '../middleware/auth/mustBe.js';
 import {upload} from "../middleware/multer/multer.js";
@@ -32,6 +33,8 @@ const router = Router();
  *              description: Server error
  */
 router.post('/', manager, upload.single('image'), addProfile);
+
+router.post('/upload-image', upload.single('image'), uploadProfileImage);
 
 /**
  * @swagger

@@ -90,7 +90,7 @@ export const getOrdersByBuyer = async (req, res) => {
 export const createOrder = async (req, res) => {
     try {
         const { buyer_id, payment_status, shipping_status } = req.body;
-        console.log("logtest",buyer_id, payment_status, shipping_status);
+        
         if (!buyer_id || !payment_status || !shipping_status) {
             return res.status(400).json({ error: "Tous les champs sont requis (buyer_id, payment_status, shipping_status)." });
         }

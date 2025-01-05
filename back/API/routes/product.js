@@ -7,7 +7,8 @@ import {
     getProductById,
     updateProduct,
     getMostRecentProducts,
-    getMostPopularProducts
+    getMostPopularProducts,
+    searchProducts
 } from "../controller/product.js";
 import {manager} from "../middleware/auth/mustBe.js";
 
@@ -32,10 +33,15 @@ const router = Router();
  *          500:
  *              description: Server error
  */
-router.get("/all", manager, getAllProducts);
+router.get("/all", getAllProducts);
 router.get("/seller/:seller_id", getProductsBySellerId);
 router.get("/recents", getMostRecentProducts);
 router.get("/popular", getMostPopularProducts)
+
+
+router.get('/search', searchProducts);
+
+
 
 /**
  * @swagger

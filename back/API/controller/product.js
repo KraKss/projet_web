@@ -69,82 +69,93 @@ export const getProductById = async (req, res)=> {
 
 export const getMostPopularProducts = async (req, res) => {
     try {
-        // Première étape : obtenir le top 5 des produits les plus commandés
-        const products = await prisma.product.findMany({
-            where: {
-                order_items: {
-                    some: {}, // Vérifier s'il existe des articles de commande associés
-                },
-            },
-            select: {
-                id: true,
-                name: true,
-                description: true,
-                price: true,
-                order_items: {
-                    select: {
-                        product_id: true,
-                    },
-                },
-            },
-        });
+        const topProducts = await prisma.$queryRaw`
+            SELECT 
+                p.id, 
+                p.name, 
+                p.description, 
+                p.price, 
+                p.seller_id,
+                pr.name AS seller_name,
+                SUM(oi.quantity) AS order_count
+            FROM product p
+            JOIN order_items oi ON p.id = oi.product_id
+            JOIN profile pr ON p.seller_id = pr.id
+            GROUP BY p.id, p.name, p.description, p.price, p.seller_id, pr.name
+            ORDER BY order_count DESC
+            LIMIT 4;
+        `;
 
-        // Deuxième étape : compter les commandes pour chaque produit
-        const productOrderCounts = await prisma.order_items.groupBy({
-            by: ['product_id'],
-            _count: {
-                product_id: true, // Compter le nombre de fois que chaque produit est commandé
-            },
-            orderBy: {
-                _count: {
-                    product_id: 'desc', // Trier par nombre de commandes
-                },
-            },
-            take: 5, // Limiter à 5 produits les plus commandés
-        });
+        const formattedProducts = topProducts.map((product) => ({
+            ...product,
+            price: Number(product.price),
+            order_count: Number(product.order_count),
+        }));
 
-        // Fusionner les informations de produits avec leur nombre de commandes
-        const topProducts = products
-            .map((product) => {
-                const orderCount = productOrderCounts.find(
-                    (item) => item.product_id === product.id
-                );
-                return {
-                    ...product,
-                    order_count: orderCount ? orderCount._count.product_id : 0,
-                };
-            })
-            .sort((a, b) => b.order_count - a.order_count); // Trier par nombre de commandes
-
-        if (topProducts.length > 0) {
-            res.status(200).json(topProducts);
+        if (formattedProducts.length > 0) {
+            res.status(200).json(formattedProducts);
         } else {
             res.status(404).send("No products found");
         }
     } catch (err) {
-        console.error("Error fetching most ordered products:", err); // Affiche l'erreur dans la console
+        console.error("Error fetching most popular products:", err);
         res.status(500).send(`An error occurred while fetching products: ${err.message}`);
     }
 };
 
-
 export const getMostRecentProducts = async (req, res) => {
     try {
-        const products = await prisma.product.findMany({
-            orderBy: {
-                id: "desc"
-            },
-            take: 4
-        });
+        const products = await prisma.$queryRaw`
+            SELECT 
+                p.id, 
+                p.name, 
+                p.description, 
+                p.price, 
+                p.seller_id,
+                pr.name AS seller_name
+            FROM product p
+            JOIN profile pr ON p.seller_id = pr.id
+            ORDER BY p.id DESC
+            LIMIT 4;
+        `;
 
-        if (products.length > 0) {
-            res.status(200).json(products);
+        const formattedProducts = products.map((product) => ({
+            ...product,
+            price: Number(product.price),
+        }));
+
+        if (formattedProducts.length > 0) {
+            res.status(200).json(formattedProducts);
         } else {
-            res.status(404).send("No products found")
+            res.status(404).send("No products found");
         }
-    } catch (e) {
+    } catch (err) {
         console.error(err);
         res.status(500).send("An error occurred while fetching products");
+    }
+};
+
+export const searchProducts = async (req, res) => {
+    const { query } = req.query;
+    
+    if (!query) {
+        return res.status(400).json({ message: "Query parameter is required" });
+    }
+
+    try {
+        const products = await prisma.product.findMany({
+            where: {
+                name: {
+                    contains: query, // Recherche insensible à la casse
+                    mode: 'insensitive' // Permet une recherche insensible à la casse
+                }
+            }
+        });
+        
+        res.json(products);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 }
 

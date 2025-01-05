@@ -1,5 +1,5 @@
 import Router from "express-promise-router";
-import {addReview, deleteReviewById, getAllReviews, getReviewBySellerId, updateReview} from "../controller/review.js";
+import {addReview, deleteReviewById, getAllReviews, getReviewBySellerId, updateReview,getReviewByReviewerAndSeller} from "../controller/review.js";
 import {manager} from "../middleware/auth/mustBe.js";
 
 /**
@@ -47,6 +47,7 @@ router.post("/", addReview);
 router.patch("/", manager, updateReview);
 router.get("/all", getAllReviews);
 router.get("/:seller_id", getReviewBySellerId);
+router.get("/:reviewer_id/:seller_id", getReviewByReviewerAndSeller);
 router.delete("/:reviewer_id/:seller_id", manager, deleteReviewById);
 
 

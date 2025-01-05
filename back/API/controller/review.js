@@ -2,6 +2,41 @@ import prisma from "../../database/databseORM.js";
 import {reviewSchema, updateReviewSchema} from "../middleware/validator/review.js";
 import {hash} from "../../utils/hash.js";
 
+export const getReviewByReviewerAndSeller = async (req, res) => {
+    try {
+        const { reviewer_id, seller_id } = req.params;
+        console.log("Requête reçue pour reviewer_id:", reviewer_id, "et seller_id:", seller_id); // 🔥 Debug
+
+        if (!reviewer_id || !seller_id) {
+            return res.status(400).json({ error: "Les IDs du reviewer et du vendeur sont requis." });
+        }
+
+        // ✅ Vérifier si la review existe avec ces IDs uniques
+        const review = await prisma.review.findUnique({
+            where: {
+                reviewer_id_seller_id: {
+                    reviewer_id: parseInt(reviewer_id),
+                    seller_id: parseInt(seller_id)
+                }
+            }
+        });
+
+        if (!review) {
+            return res.status(404).json({ message: "Aucune review trouvée pour cette combinaison reviewer_id et seller_id." });
+        }
+
+        console.log("Review trouvée :", review);
+        res.status(200).json(review);
+    } catch (error) {
+        console.error("Erreur lors de la récupération de la review:", error);
+        res.status(500).json({
+            error: "Erreur serveur",
+            details: error.message,
+        });
+    }
+};
+
+
 /**
  * @swagger
  * components:

@@ -60,6 +60,7 @@ const FormPopup = ({ isOpen, onClose, formFields, onSubmit, editMode, initialDat
         if (isValid) {
             onSubmit(formData);
             onClose();
+            setFormData([]);
         }
     };
 
@@ -71,7 +72,26 @@ const FormPopup = ({ isOpen, onClose, formFields, onSubmit, editMode, initialDat
                 <h3>{editMode ? "Edit Item" : "Add New"}</h3>
                 <form onSubmit={handleSubmit}>
                     {formFields.map((field) => {
-                        if (typeof field === "string") {
+                        if (field === "image") {
+                            return (
+                                <div key={field} className={styles.formField}>
+                                    <label htmlFor={field}>{field}</label>
+                                    <input
+                                        type="file"
+                                        id={field}
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            const file = e.target.files[0];
+                                            setFormData((prevData) => ({
+                                                ...prevData,
+                                                [field]: file,
+                                            }));
+                                        }}
+                                    />
+                                    {errors[field] && <span className={styles.error}>{errors[field]}</span>}
+                                </div>
+                            );
+                        } else if (typeof field === "string") {
                             return (
                                 <div key={field} className={styles.formField}>
                                     <label htmlFor={field}>{field}</label>

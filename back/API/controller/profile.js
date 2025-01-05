@@ -1,6 +1,9 @@
 import prisma from "../../database/databseORM.js";
 import {profileSchema, updateProfileSchema} from "../middleware/validator/profile.js";
 import {hash} from "../../utils/hash.js";
+import {saveImage} from "../../utils/imageManager.js";
+import * as uuid from "uuid";
+
 
 /**
  * @swagger
@@ -127,18 +130,29 @@ export const getAllProfiles = async (req, res) => {
 
 export const addProfile = async (req, res) => {
     try {
-
+        if (req.body.balance) req.body.balance = parseFloat(req.body.balance);
         const {name, email, password, address, bank_account, balance} = req.body;
 
+        const floatBalance = parseFloat(balance);
+        console.log("balance : ", balance, floatBalance, typeof balance)
         const validatedBody = profileSchema.parse({
             name, email, password, address, bank_account, balance
         })
         const hashedPassword = await hash(password, 10);
-        const validData = {
-            ...validatedBody,
-            password: hashedPassword
+        console.log("valid balance : ", validatedBody.balance)
+        let imagePath = null;
+        if (req.file) {
+            const imageName = uuid.v4();
+            imagePath = `${imageName}.jpeg`;
+            await saveImage(req.file.buffer, imageName, "./upload");
         }
 
+        const validData = {
+            ...validatedBody,
+            password: hashedPassword,
+            image: imagePath
+        }
+        console.log("valid data : ", validData)
         const {id} = await prisma.profile.create({
             data: validData,
             select: {

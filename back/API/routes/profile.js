@@ -7,8 +7,8 @@ import {
     deleteProfileById,
     getProfileByEmail
 } from '../controller/profile.js';
-import {authBasic} from '../middleware/auth/basic.js';
 import {manager} from '../middleware/auth/mustBe.js';
+import {upload} from "../middleware/multer/multer.js";
 
 const router = Router();
 
@@ -31,7 +31,7 @@ const router = Router();
  *          500:
  *              description: Server error
  */
-router.post('/', manager, addProfile);
+router.post('/', manager, upload.single('image'), addProfile);
 
 /**
  * @swagger

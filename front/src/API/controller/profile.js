@@ -12,13 +12,21 @@ const getAllProfiles = async () => {
 
 const addProfile = async (profile) => {
     try {
-        if (profile.balance) profile.balance = parseFloat(profile.balance);
-        const { data } = await apiClient.post(API_ROUTES.PROFILE_ROUTE, profile);
+        const formData = new FormData();
+        Object.entries(profile).forEach(([key, value]) => {
+            formData.append(key, value);
+        });
+
+        const { data } = await apiClient.post(API_ROUTES.PROFILE_ROUTE, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+
         return data;
     } catch (e) {
-        throw new Error("Une erreur est survenue, réessayer plus tard: " + e);
+        throw new Error("Une erreur est survenue, réessayez plus tard: " + e);
     }
 };
+
 
 const updateProfile = async (updatedData) => {
     try {
